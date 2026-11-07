@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 48" fill="none">
+  <rect width="48" height="48" rx="12" fill="#102833"/>
+  <circle cx="24" cy="18" r="7.5" stroke="#F3EFE6" stroke-width="2.2"/>
+  <circle cx="24" cy="18" r="2.4" fill="#C4622D"/>
+  <path d="M24 25.5v9.5M17 35h14" stroke="#F3EFE6" stroke-width="2.2" stroke-linecap="round"/>
+  <text x="62" y="22" fill="#102833" font-family="Georgia, 'Times New Roman', serif" font-size="20">BD Instruments</text>
+  <text x="62" y="38" fill="#5C6B73" font-family="Segoe UI, Arial, sans-serif" font-size="10" letter-spacing="2.4">LABORATORIO</text>
+</svg>

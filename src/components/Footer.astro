@@ -1,0 +1,183 @@
+---
+import { categories } from '../data/categories';
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="footer">
+  <div class="wrap footer-cta">
+    <h2>Cuéntanos qué necesitas medir y te enviamos una cotización</h2>
+    <div class="footer-cta-actions">
+      <a class="footer-btn footer-btn-light" href="/contacto">Solicitar cotización</a>
+      <a class="footer-btn footer-btn-wa" href={`https://wa.me/${site.whatsapp}`}>WhatsApp</a>
+    </div>
+  </div>
+  <div class="wrap footer-grid">
+    <div>
+      <a class="footer-logo" href="/" aria-label="BD Instruments - Inicio">
+        <img
+            class="logo-img"
+            src="https://bdinstruments.com/wp-content/uploads/2024/08/BD-instruments-logotipo-1.png"
+            alt="BD Instruments - Precisión que transforma"
+            height="48"
+        />
+      </a>
+      <p class="footer-desc">{site.description}</p>
+    </div>
+    <div>
+      <h3>Mapa</h3>
+      <ul>
+        <li><a href="/productos">Productos</a></li>
+        <li><a href="/servicios">Servicios</a></li>
+        <li><a href="/proyectos">Proyectos</a></li>
+        <li><a href="/nosotros">Nosotros</a></li>
+        <li><a href="/contacto">Contacto</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Categorías</h3>
+      <ul>
+        {
+          categories.map((category) => (
+            <li>
+              <a href={`/productos?categoria=${category.slug}`}>{category.name}</a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <div>
+      <h3>Contacto</h3>
+      <ul>
+        <li>{site.address}</li>
+        <li>{site.city}</li>
+        <li><a href={`tel:${site.phoneTel}`}>{site.phoneDisplay}</a></li>
+        <li><a href={`https://wa.me/${site.whatsapp}`}>{site.whatsappDisplay}</a></li>
+        <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+        <li>{site.hours}</li>
+      </ul>
+    </div>
+  </div>
+  <div class="wrap footer-base">
+    <p>© {year} {site.name}. Todos los derechos reservados.</p>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    padding: 0;
+    border-top: 0;
+    background: #0a1330;
+    color: #c7d3f2;
+  }
+
+  .footer a:hover {
+    color: #fff;
+  }
+
+  .footer-cta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+    padding-block: 64px 52px;
+    border-bottom: 1px solid rgb(255 255 255 / 16%);
+  }
+
+  .footer-cta h2 {
+    max-width: 22ch;
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.75rem, 3.2vw, 2.6rem);
+    line-height: 1.15;
+  }
+
+  .footer-cta-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .footer .footer-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 26px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .footer .footer-btn-light {
+    background: #fff;
+    color: #0b3d9c;
+  }
+
+  .footer .footer-btn-light:hover {
+    background: #e6eeff;
+    color: #0b3d9c;
+  }
+
+  .footer .footer-btn-wa {
+    background: #1fa855;
+    color: #fff;
+  }
+
+  .footer .footer-btn-wa:hover {
+    background: #188f48;
+  }
+
+  .footer-grid {
+    padding-block: 52px 44px;
+  }
+
+  .footer-logo {
+    display: inline-block;
+    margin-bottom: 16px;
+    padding: 8px 14px;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .footer-logo .logo-img {
+    display: block;
+    width: auto;
+    height: 44px;
+  }
+
+  .footer-desc {
+    max-width: 34ch;
+    margin: 0;
+  }
+
+  .footer h3 {
+    margin: 0 0 14px;
+    color: #fff;
+    font-size: 0.95rem;
+  }
+
+  .footer ul {
+    margin: 0;
+    gap: 0.55rem;
+  }
+
+  .footer-base {
+    margin-top: 0;
+    padding-block: 20px 28px;
+    border-top: 1px solid rgb(255 255 255 / 16%);
+    color: #9fb2e2;
+  }
+
+  .footer-base p {
+    margin: 0;
+  }
+
+  @media (max-width: 720px) {
+    .footer-cta {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

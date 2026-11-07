@@ -1,0 +1,70 @@
+---
+import MainLayout from '../layouts/MainLayout.astro';
+
+const values = [
+  {
+    title: 'El dato manda',
+    text: 'La recomendación sale del método, del rango y de las condiciones del laboratorio.',
+  },
+  {
+    title: 'El equipo tiene que quedar operando',
+    text: 'La entrega incluye instalación, verificación inicial y una persona que sepa usarlo.',
+  },
+  {
+    title: 'El soporte tiene nombre',
+    text: 'Mantenimiento, repuestos y dudas vuelven al mismo canal, con el modelo identificado.',
+  },
+];
+
+const steps = [
+  'Escuchamos el método, la matriz, la frecuencia y el espacio disponible.',
+  'Proponemos el instrumento, los accesorios y el alcance de instalación.',
+  'Instalamos, verificamos el arranque y entrenamos a quien opera.',
+  'Dejamos programado el mantenimiento y el contacto para repuestos.',
+];
+---
+
+<MainLayout
+  title="Nosotros"
+  description="BD Instruments suministra, instala y da soporte a instrumentos de laboratorio."
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="kicker">Nosotros</p>
+      <h1>Instrumentos, instalación y alguien que responde después.</h1>
+      <p class="lead">
+        BD Instruments comercializa instrumentación analítica y equipos de laboratorio, y acompaña
+        la instalación y el soporte. La oficina está en Av. Marginal 601, Ate – Salamanca, Lima.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section-follow">
+    <div class="wrap">
+      <div class="value-grid">
+        {
+          values.map((value) => (
+            <article class="value-card">
+              <h2>{value.title}</h2>
+              <p>{value.text}</p>
+            </article>
+          ))
+        }
+      </div>
+      <h2 style="margin-top: 2.5rem">Cómo empieza un encargo</h2>
+      <ol class="steps">
+        {steps.map((step) => <li>{step}</li>)}
+      </ol>
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div class="wrap cta-band-inner">
+      <div>
+        <h2>Cuéntenos qué necesita medir.</h2>
+        <p>Con eso preparamos opciones de equipo y el alcance de puesta en marcha.</p>
+      </div>
+      <a class="button button-light" href="/contacto">Ir a contacto</a>
+    </div>
+  </div>
+</MainLayout>

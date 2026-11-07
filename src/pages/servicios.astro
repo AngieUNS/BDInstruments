@@ -1,0 +1,36 @@
+---
+import ServiceSection from '../components/ServiceSection.astro';
+import { services } from '../data/services';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Servicios"
+  description="Suministro, instalación, calibración, mantenimiento, capacitación y repuestos para instrumentos de laboratorio."
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="kicker">Servicios</p>
+      <h1>Acompañamiento durante la vida del equipo</h1>
+      <p class="lead">
+        El instrumento llega con instalación, verificación y un canal para mantenimiento, repuestos y entrenamiento.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section-follow">
+    <div class="wrap stack">
+      {services.map((service, index) => <ServiceSection service={service} index={index} />)}
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div class="wrap cta-band-inner">
+      <div>
+        <h2>Cuéntenos qué equipo ya tiene o cuál está por llegar.</h2>
+        <p>Con el modelo y el uso diario armamos el alcance de instalación o de mantenimiento.</p>
+      </div>
+      <a class="button button-light" href="/contacto">Solicitar servicio</a>
+    </div>
+  </div>
+</MainLayout>

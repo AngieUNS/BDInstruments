@@ -1,0 +1,45 @@
+---
+import { projects } from '../data/projects';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Proyectos"
+  description="Alcance de suministro e instalación para laboratorios clínicos, de alimentos, de agua y universitarios."
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="kicker">Proyectos</p>
+      <h1>Qué incluye cada tipo de laboratorio</h1>
+      <p class="lead">
+        Estos cuatro escenarios muestran el conjunto de equipos y el acompañamiento que suele hacer falta. El alcance final se ajusta a su método.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section-follow">
+    <div class="wrap stack">
+      {
+        projects.map((project) => (
+          <article class="service-block" id={project.slug}>
+            <div>
+              <p class="kicker">{project.sector}</p>
+              <h2>{project.title}</h2>
+              <p class="lead">{project.need}</p>
+              <div class="media-placeholder">Foto del proyecto</div>
+            </div>
+            <div class="scope-card">
+              <h3>Alcance habitual</h3>
+              <p>{project.summary}</p>
+              <ul>
+                {project.scope.map((item) => (
+                  <li>{item}</li>
+                ))}
+              </ul>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+  </section>
+</MainLayout>

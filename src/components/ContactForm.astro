@@ -1,0 +1,152 @@
+---
+import { categories } from '../data/categories';
+import { services } from '../data/services';
+import { site, whatsappHref } from '../data/site';
+---
+
+<form
+  class="form"
+  id="formulario-contacto"
+  novalidate
+  data-phone={site.whatsapp}
+  data-email={site.email}
+>
+  <div class="field">
+    <label for="nombre"><span>Nombre</span></label>
+    <input id="nombre" name="nombre" type="text" autocomplete="name" required />
+    <p class="field-error" id="error-nombre"></p>
+  </div>
+  <div class="field">
+    <label for="empresa"><span>Empresa o laboratorio</span></label>
+    <input id="empresa" name="empresa" type="text" autocomplete="organization" />
+    <p class="field-error" id="error-empresa"></p>
+  </div>
+  <div class="field">
+    <label for="email"><span>Correo</span></label>
+    <input id="email" name="email" type="email" autocomplete="email" required />
+    <p class="field-error" id="error-email"></p>
+  </div>
+  <div class="field">
+    <label for="telefono"><span>Teléfono</span></label>
+    <input id="telefono" name="telefono" type="tel" autocomplete="tel" />
+    <p class="field-error" id="error-telefono"></p>
+  </div>
+  <div class="field">
+    <label for="interes"><span>Interés</span></label>
+    <select id="interes" name="interes" required>
+      <option value="">Seleccione una opción</option>
+      <optgroup label="Equipos">
+        {categories.map((category) => <option value={category.name}>{category.name}</option>)}
+      </optgroup>
+      <optgroup label="Servicios">
+        {services.map((service) => <option value={service.title}>{service.title}</option>)}
+      </optgroup>
+      <option value="Otro">Otro</option>
+    </select>
+    <p class="field-error" id="error-interes"></p>
+  </div>
+  <div class="field">
+    <label for="mensaje"><span>Mensaje</span></label>
+    <textarea
+      id="mensaje"
+      name="mensaje"
+      required
+      minlength="20"
+      placeholder="Cuéntenos el método, la matriz y el rango que necesita."
+    ></textarea>
+    <p class="field-error" id="error-mensaje"></p>
+  </div>
+  <button class="button" type="submit">Preparar mensaje</button>
+</form>
+
+<div class="form-success" hidden data-success tabindex="-1">
+  <h3>Mensaje listo para enviar</h3>
+  <p>
+    Este formulario no guarda los datos en un servidor. Ábralo en WhatsApp o en su correo y
+    envíelo desde allí.
+  </p>
+  <div class="hero-actions">
+    <a class="button" data-whatsapp href={whatsappHref()} target="_blank" rel="noopener noreferrer">
+      Enviar por WhatsApp
+    </a>
+    <a class="button button-line" data-mail href={`mailto:${site.email}`}>Enviar por correo</a>
+  </div>
+  <button class="button button-line" type="button" data-reset>Escribir otro mensaje</button>
+</div>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>('#formulario-contacto');
+  const success = document.querySelector<HTMLElement>('[data-success]');
+  const whatsappLink = document.querySelector<HTMLAnchorElement>('[data-whatsapp]');
+  const mailLink = document.querySelector<HTMLAnchorElement>('[data-mail]');
+  const resetButton = document.querySelector<HTMLButtonElement>('[data-reset]');
+
+  const fields = ['nombre', 'email', 'interes', 'mensaje'] as const;
+
+  function valueOf(name: string) {
+    const field = form?.elements.namedItem(name);
+    if (field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement || field instanceof HTMLSelectElement) {
+      return field.value.trim();
+    }
+    return '';
+  }
+
+  function setError(name: string, message: string) {
+    const field = form?.elements.namedItem(name);
+    const error = document.getElementById(`error-${name}`);
+    if (field instanceof HTMLElement) field.setAttribute('aria-invalid', message ? 'true' : 'false');
+    if (error) error.textContent = message;
+  }
+
+  function validate() {
+    let valid = true;
+    const nombre = valueOf('nombre');
+    const email = valueOf('email');
+    const interes = valueOf('interes');
+    const mensaje = valueOf('mensaje');
+
+    setError('nombre', nombre ? '' : 'Escriba su nombre.');
+    setError('email', /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? '' : 'Escriba un correo válido.');
+    setError('interes', interes ? '' : 'Seleccione un interés.');
+    setError('mensaje', mensaje.length >= 20 ? '' : 'El mensaje necesita al menos 20 caracteres.');
+
+    for (const name of fields) {
+      const error = document.getElementById(`error-${name}`);
+      if (error?.textContent) valid = false;
+    }
+    return valid;
+  }
+
+  form?.addEventListener('submit', (event) => {
+    event.preventDefault();
+    if (!form || !validate() || !whatsappLink || !mailLink || !success) return;
+
+    const text = [
+      `Hola, soy ${valueOf('nombre')}.`,
+      valueOf('empresa') ? `Empresa: ${valueOf('empresa')}.` : '',
+      `Correo: ${valueOf('email')}.`,
+      valueOf('telefono') ? `Teléfono: ${valueOf('telefono')}.` : '',
+      `Interés: ${valueOf('interes')}.`,
+      valueOf('mensaje'),
+    ]
+      .filter(Boolean)
+      .join(' ');
+
+    const phone = form.dataset.phone ?? '';
+    const email = form.dataset.email ?? '';
+    whatsappLink.href = `https://wa.me/${phone}?text=${encodeURIComponent(text)}`;
+    mailLink.href = `mailto:${email}?subject=${encodeURIComponent('Consulta BD Instruments')}&body=${encodeURIComponent(text)}`;
+    form.hidden = true;
+    success.hidden = false;
+    success.focus?.();
+  });
+
+  resetButton?.addEventListener('click', () => {
+    if (!form || !success) return;
+    form.reset();
+    for (const name of fields) setError(name, '');
+    success.hidden = true;
+    form.hidden = false;
+    form.querySelector('input')?.focus();
+  });
+</script>

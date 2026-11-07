@@ -1,0 +1,459 @@
+---
+const brands = [
+  {
+    name: 'Skalar Analytical',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/SKALAR-ANALYTICAL_.png',
+  },
+  {
+    name: 'Teledyne Leeman Labs',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/TELEDYNE-LEEMAN-LABS_.png',
+  },
+  {
+    name: 'Teledyne Tekmar',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/TELEDYNE-TEKMAR_.png',
+  },
+  {
+    name: 'Teledyne Cetac',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/TELEDYNE-CETAC_.png',
+  },
+  {
+    name: 'Visum Palm',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/06/Mesa-de-trabajo-2-1.png',
+  },
+  {
+    name: 'Bürkle',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/burkle-1.png',
+  },
+  {
+    name: 'CONCOA',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/CONCOA_.png',
+  },
+  {
+    name: 'Green Scientific',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/GREEN-SCIENTIFIC_.png',
+  },
+  {
+    name: 'Young In Chromass',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/YOUNG-IN-CHROMASS_.png',
+  },
+  {
+    name: 'HySpex NEO',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/HYSPEX-NEO_.png',
+  },
+  {
+    name: 'Lamy Rheology',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/LAMY-RHEOLOGY_.png',
+  },
+  {
+    name: 'Rephile Bioscience',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/REPHILE-BIOSCIENCE_.png',
+  },
+  {
+    name: 'Lan Scientific',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/LAN-SCIENTIFIC_.png',
+  },
+  {
+    name: 'Nabertherm',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/NABERTHERM_.png',
+  },
+  {
+    name: 'Hanon Instruments',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/HANON-INSTRUMENTS_.png',
+  },
+  {
+    name: 'Apera Instruments',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/Apera.png',
+  },
+  {
+    name: 'Mantech',
+    image: 'https://bdinstruments.com/wp-content/uploads/2026/03/MANTECH.webp',
+  },
+  {
+    name: 'Teledyne Hanson',
+    image: 'https://bdinstruments.com/wp-content/uploads/2026/03/TELDEYNE-2.png',
+  },
+  {
+    name: 'Solaris',
+    image: 'https://bdinstruments.com/wp-content/uploads/2026/03/SOLARIS.webp',
+  },
+  {
+    name: 'Dürr Technik',
+    image: 'https://bdinstruments.com/wp-content/uploads/2026/03/DURR-TECHNIK.webp',
+  },
+  {
+    name: 'Chromalytic',
+    image: 'https://bdinstruments.com/wp-content/uploads/2026/03/CHROMALYTIC.png',
+  },
+  {
+    name: 'QLA',
+    image: 'https://bdinstruments.com/wp-content/uploads/2026/03/QLA.webp',
+  },
+];
+---
+
+<section class="brands-section" aria-label="Nuestros fabricantes">
+  <div class="wrap">
+    <div class="brands-heading">
+      <p class="brands-kicker">NUESTROS FABRICANTES</p>
+      <h2>Marcas que respaldan nuestras soluciones</h2>
+      <p>
+        Trabajamos con fabricantes especializados para ofrecer tecnología
+        y equipamiento para laboratorios e industria.
+      </p>
+    </div>
+
+    <div class="brands-carousel">
+      <button
+          class="brands-arrow brands-prev"
+          type="button"
+          aria-label="Ver marcas anteriores"
+      >
+        &#8592;
+      </button>
+
+      <div class="brands-viewport">
+        <div class="brands-track">
+          {brands.map((brand) => (
+              <div class="brand-slide">
+                <div class="brand-logo">
+                  <img
+                      src={brand.image}
+                      alt={brand.name}
+                      loading="lazy"
+                      decoding="async"
+                  />
+                </div>
+              </div>
+          ))}
+        </div>
+      </div>
+
+      <button
+          class="brands-arrow brands-next"
+          type="button"
+          aria-label="Ver marcas siguientes"
+      >
+        &#8594;
+      </button>
+    </div>
+
+    <p class="brands-footer">
+      Tecnología especializada para laboratorios e industria.
+    </p>
+  </div>
+</section>
+
+<style>
+  .brands-section {
+    padding: 76px 0;
+    overflow: hidden;
+    color: #fff;
+    background:
+      radial-gradient(620px 360px at 85% 0%, #2f6fe0 0%, transparent 70%),
+      linear-gradient(135deg, #12286b 0%, #183a8f 50%, #1f56c8 140%);
+  }
+
+  .brands-heading {
+    max-width: 720px;
+    margin: 0 auto 42px;
+    text-align: center;
+  }
+
+  .brands-kicker {
+    margin: 0 0 14px;
+    color: #b7cfff;
+    font-size: 0.85rem;
+    font-weight: 800;
+    letter-spacing: 0.14em;
+  }
+
+  .brands-heading h2 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    font-weight: 750;
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+  }
+
+  .brands-heading > p:last-child {
+    max-width: 570px;
+    margin: 16px auto 0;
+    color: #d5def5;
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .brands-carousel {
+    position: relative;
+    padding: 0 58px;
+  }
+
+  .brands-viewport {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .brands-track {
+    display: flex;
+    width: 100%;
+    gap: 22px;
+    will-change: transform;
+  }
+
+  .brand-slide {
+    display: flex;
+    flex: 0 0 calc((100% - 44px) / 3);
+    min-width: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-logo {
+    display: flex;
+    width: 100%;
+    height: 175px;
+    align-items: center;
+    justify-content: center;
+    padding: 26px;
+    border: 1px solid rgb(255 255 255 / 70%);
+    border-radius: 16px;
+    background: #fff;
+    transition:
+        border-color 0.25s ease,
+        box-shadow 0.25s ease,
+        transform 0.25s ease;
+  }
+
+  .brand-logo:hover {
+    border-color: #b6c9e8;
+    box-shadow: 0 10px 28px rgb(12 27 51 / 9%);
+    transform: translateY(-3px);
+  }
+
+  .brand-logo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 260px;
+    max-height: 115px;
+    object-fit: contain;
+    object-position: center;
+  }
+
+  .brands-arrow {
+    position: absolute;
+    top: 50%;
+    z-index: 2;
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--brand);
+    font-size: 21px;
+    cursor: pointer;
+    transform: translateY(-50%);
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+  }
+
+  .brands-arrow:hover {
+    border-color: var(--brand);
+    background: var(--brand);
+    color: white;
+  }
+
+  .brands-prev {
+    left: 0;
+  }
+
+  .brands-next {
+    right: 0;
+  }
+
+  .brands-footer {
+    margin: 30px 0 0;
+    color: #d5def5;
+    font-size: 0.85rem;
+    text-align: center;
+  }
+
+  @media (max-width: 700px) {
+    .brands-section {
+      padding: 52px 0;
+    }
+
+    .brands-heading {
+      margin-bottom: 28px;
+    }
+
+    .brands-carousel {
+      padding: 0;
+    }
+
+    .brand-slide {
+      flex-basis: 100%;
+    }
+
+    .brands-track {
+      gap: 16px;
+    }
+
+    .brand-logo {
+      height: 175px;
+      padding: 24px;
+    }
+
+    .brands-arrow {
+      display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .brands-track {
+      will-change: auto;
+    }
+
+    .brand-logo,
+    .brands-arrow {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  document.querySelectorAll('.brands-carousel').forEach((carousel) => {
+    const viewport = carousel.querySelector('.brands-viewport');
+    const track = carousel.querySelector('.brands-track');
+    const previous = carousel.querySelector('.brands-prev');
+    const next = carousel.querySelector('.brands-next');
+
+    if (!viewport || !track || !previous || !next) return;
+
+    const originalSlides = Array.from(track.children);
+    if (originalSlides.length < 4) return;
+
+    // Duplicamos los logotipos para obtener un desplazamiento continuo.
+    originalSlides.forEach((slide) => {
+      const clone = slide.cloneNode(true);
+      clone.setAttribute('aria-hidden', 'true');
+      track.appendChild(clone);
+    });
+
+    let position = 0;
+    let animationFrame = 0;
+    let lastTime = 0;
+    let paused = false;
+    let cycleWidth = 0;
+
+    const reducedMotion = window.matchMedia(
+        '(prefers-reduced-motion: reduce)'
+    );
+
+    const getGap = () =>
+        parseFloat(getComputedStyle(track).gap) || 0;
+
+    const measure = () => {
+      const firstClone = track.children[originalSlides.length];
+
+      if (!firstClone) return;
+
+      cycleWidth =
+          firstClone.offsetLeft - originalSlides[0].offsetLeft;
+
+      if (cycleWidth > 0) {
+        position = position % cycleWidth;
+        track.style.transform = `translate3d(${-position}px, 0, 0)`;
+      }
+    };
+
+    const speed = 35; // Píxeles por segundo.
+
+    const animate = (timestamp) => {
+      if (!lastTime) lastTime = timestamp;
+
+      const delta = Math.min((timestamp - lastTime) / 1000, 0.05);
+      lastTime = timestamp;
+
+      if (!paused && !reducedMotion.matches && cycleWidth > 0) {
+        position = (position + speed * delta) % cycleWidth;
+        track.style.transform = `translate3d(${-position}px, 0, 0)`;
+      }
+
+      animationFrame = requestAnimationFrame(animate);
+    };
+
+    const stop = () => {
+      cancelAnimationFrame(animationFrame);
+    };
+
+    const start = () => {
+      stop();
+      lastTime = 0;
+      animationFrame = requestAnimationFrame(animate);
+    };
+
+    const moveManually = (direction) => {
+      const first = track.children[0];
+      if (!first) return;
+
+      const distance = first.getBoundingClientRect().width + getGap();
+
+      position += direction * distance;
+
+      if (position < 0) position += cycleWidth;
+      if (position >= cycleWidth) position -= cycleWidth;
+
+      track.style.transform = `translate3d(${-position}px, 0, 0)`;
+    };
+
+    previous.addEventListener('click', () => moveManually(-1));
+    next.addEventListener('click', () => moveManually(1));
+
+    carousel.addEventListener('mouseenter', () => {
+      paused = true;
+    });
+
+    carousel.addEventListener('mouseleave', () => {
+      paused = false;
+    });
+
+    carousel.addEventListener('focusin', () => {
+      paused = true;
+    });
+
+    carousel.addEventListener('focusout', (event) => {
+      if (!carousel.contains(event.relatedTarget)) paused = false;
+    });
+
+    viewport.addEventListener('touchstart', () => {
+      paused = true;
+    }, { passive: true });
+
+    viewport.addEventListener('touchend', () => {
+      paused = false;
+    }, { passive: true });
+
+    reducedMotion.addEventListener('change', () => {
+      if (reducedMotion.matches) {
+        paused = true;
+      } else {
+        paused = false;
+      }
+    });
+
+    const resizeObserver = new ResizeObserver(() => {
+      measure();
+    });
+
+    resizeObserver.observe(viewport);
+
+    measure();
+    start();
+  });
+</script>

@@ -1,0 +1,237 @@
+---
+interface Props {
+  slug: string;
+  name: string;
+  description: string;
+  count?: number;
+  icon?: string; // ruta a un SVG, opcional
+  variant?: 'default' | 'compact';
+}
+
+const { slug, name, description, count, icon, variant = 'default' } = Astro.props;
+
+// Usa `count` en vez de un texto fijo; si no hay dato, cae al texto genérico
+const label =
+    count === undefined
+        ? 'Ver equipos'
+        : count === 0
+            ? 'Ver equipos'
+            : `${count} ${count === 1 ? 'equipo' : 'equipos'}`;
+
+const href = `/productos?categoria=${encodeURIComponent(slug)}`;
+---
+
+<a class:list={['category-card', variant]} href={href}>
+  <div class="category-card-top">
+    {icon ? (
+        <div class="category-icon">
+          <img src={icon} alt="" width="32" height="32" loading="lazy" />
+        </div>
+    ) : (
+        <div class="category-icon" aria-hidden="true">
+          {slug === 'instrumentacion-analitica' && (
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M9 3h6M10 3v7l-5 9a1 1 0 0 0 1 2h12a1 1 0 0 0 1-2l-5-9V3M8 15h8" />
+              </svg>
+          )}
+          {slug === 'equipos-laboratorio' && (
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M7 3h10M9 3v7l-4 7a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-4-7V3M7 15h10" />
+              </svg>
+          )}
+          {slug === 'proyectos-ingenieria' && (
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="m14 6 4-4 4 4-4 4M18 6l-7 7M9 8l-6 6 7 7 6-6M5 17l2 2" />
+              </svg>
+          )}
+          {slug === 'servicios' && (
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 8v4l3 2M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" />
+              </svg>
+          )}
+        </div>
+    )}
+
+    <span class="category-arrow" aria-hidden="true">↗</span>
+  </div>
+
+  <div class="category-card-content">
+    <h3>{name}</h3>
+    {variant === 'default' && <p>{description}</p>}
+  </div>
+
+  <div class="category-card-footer">
+    <span class="category-count">{label}</span>
+    <span class="category-link">Explorar <span aria-hidden="true">→</span></span>
+  </div>
+</a>
+
+<style>
+  .category-card {
+    display: flex;
+    min-width: 0;
+    min-height: 280px;
+    height: 100%;
+    flex-direction: column;
+    gap: 22px;
+    padding: 25px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: var(--surface);
+    color: inherit;
+    text-decoration: none;
+    transition:
+        border-color 0.22s ease,
+        box-shadow 0.22s ease,
+        transform 0.22s ease;
+  }
+
+  .category-card:hover {
+    border-color: var(--brand-2);
+    box-shadow: 0 12px 30px rgb(12 27 51 / 7%);
+    transform: translateY(-4px);
+  }
+
+  .category-card:focus-visible {
+    outline: 3px solid var(--brand-2);
+    outline-offset: 3px;
+  }
+
+  .category-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .category-icon {
+    display: grid;
+    width: 58px;
+    height: 58px;
+    flex-shrink: 0;
+    place-items: center;
+    border: 1px solid #dbe6f8;
+    border-radius: 12px;
+    background: #edf3fd;
+    color: var(--brand);
+  }
+
+  .category-icon svg {
+    width: 30px;
+    height: 30px;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .category-icon img {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+  }
+
+  .category-arrow {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex-shrink: 0;
+    place-items: center;
+    border: 1px solid var(--line);
+    border-radius: 50%;
+    color: var(--brand);
+    transition:
+        color 0.2s ease,
+        background 0.2s ease,
+        border-color 0.2s ease;
+  }
+
+  .category-card:hover .category-arrow {
+    border-color: var(--brand);
+    background: var(--brand);
+    color: white;
+  }
+
+  .category-card-content {
+    flex: 1;
+  }
+
+  .category-card h3 {
+    margin: 0;
+    color: var(--ink);
+    font-size: 1.15rem;
+    font-weight: 750;
+    line-height: 1.4;
+  }
+
+  .category-card-content p {
+    margin: 11px 0 0;
+    color: var(--muted);
+    font-size: 0.9rem;
+    line-height: 1.75;
+  }
+
+  .category-card-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 17px;
+    border-top: 1px solid var(--line);
+  }
+
+  .category-count {
+    color: var(--muted);
+    font-size: 0.8rem;
+  }
+
+  .category-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: var(--brand);
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .category-link span {
+    transition: transform 0.2s ease;
+  }
+
+  .category-card:hover .category-link span {
+    transform: translateX(4px);
+  }
+
+  .category-card.compact {
+    min-height: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px;
+  }
+
+  .category-card.compact .category-card-content p,
+  .category-card.compact .category-card-footer {
+    display: none;
+  }
+
+  @media (max-width: 600px) {
+    .category-card {
+      min-height: 245px;
+      padding: 22px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .category-card,
+    .category-arrow,
+    .category-link span {
+      transition: none;
+    }
+
+    .category-card:hover {
+      transform: none;
+    }
+  }
+</style>

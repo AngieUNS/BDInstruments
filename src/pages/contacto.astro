@@ -1,0 +1,59 @@
+---
+import ContactForm from '../components/ContactForm.astro';
+import { site, whatsappHref } from '../data/site';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Contacto"
+  description="Solicite una cotización o una visita técnica para instrumentos de laboratorio."
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="kicker">Contacto</p>
+      <h1>Cuéntenos el método y el equipo que tiene en mente.</h1>
+      <p class="lead">
+        Responderemos con opciones de suministro, instalación o soporte. El formulario arma el mensaje
+        para enviarlo por WhatsApp o por correo.
+      </p>
+    </div>
+  </header>
+
+  <div class="wrap contact-layout">
+    <div class="form-card">
+      <h2>Escriba su consulta</h2>
+      <ContactForm />
+    </div>
+    <aside class="contact-aside">
+      <article class="info-card">
+        <h2>Datos directos</h2>
+        <p>{site.address}, {site.city}</p>
+        <p><a href={`tel:${site.phoneTel}`}>{site.phoneDisplay}</a></p>
+        <p><a href={whatsappHref()} target="_blank" rel="noopener noreferrer">WhatsApp {site.whatsappDisplay}</a></p>
+        <p><a href={`mailto:${site.email}`}>{site.email}</a></p>
+        <p><a href={`mailto:${site.infoEmail}`}>{site.infoEmail}</a></p>
+        <p>{site.hours}</p>
+      </article>
+      <article class="info-card">
+        <h2>Qué incluir</h2>
+        <p>Método o parámetro, matriz de la muestra, rango esperado y si el equipo es nuevo o ya está instalado.</p>
+      </article>
+    </aside>
+  </div>
+</MainLayout>
+
+<script>
+  const params = new URLSearchParams(location.search);
+  const interes = params.get('interes');
+  const select = document.querySelector<HTMLSelectElement>('#interes');
+  if (interes && select) {
+    const exists = [...select.options].some((option) => option.value === interes);
+    if (!exists) {
+      const option = document.createElement('option');
+      option.value = interes;
+      option.textContent = interes;
+      select.append(option);
+    }
+    select.value = interes;
+  }
+</script>

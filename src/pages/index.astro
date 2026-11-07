@@ -1,0 +1,469 @@
+---
+import Hero from '../components/Hero.astro';
+import Manufacturers from '../components/Manufacturers.astro';
+import { categories, getCategory } from '../data/categories';
+import { featuredProducts, getProductsByCategory } from '../data/products';
+import { projects } from '../data/projects';
+import { services } from '../data/services';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout title="Instrumentación de laboratorio">
+  <Hero />
+
+  <section class="section categories-section">
+    <div class="wrap categories-layout">
+      <div class="categories-intro">
+        <p class="kicker">NUESTRAS SOLUCIONES</p>
+        <h2>Todo para equipar y mantener tu laboratorio</h2>
+        <p class="lead">
+          Cuatro líneas de trabajo, desde la elección del equipo hasta su puesta en marcha y soporte.
+        </p>
+        <a class="categories-contact" href="/contacto">¿No sabes por dónde empezar? Escríbenos</a>
+      </div>
+
+      <ul class="categories-list">
+        {
+          categories.map((category) => (
+            <li>
+              <a class="category-row" href={`/productos?categoria=${encodeURIComponent(category.slug)}`}>
+                <div>
+                  <h3>{category.name}</h3>
+                  <p>{category.description}</p>
+                  <span class="category-meta">
+                    {getProductsByCategory(category.slug).length} equipos disponibles
+                  </span>
+                </div>
+                <span class="category-row-arrow" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <style>
+    .categories-section {
+      padding-block: 80px;
+      background: linear-gradient(180deg, #eaeff9 0%, var(--paper) 100%);
+    }
+
+    .categories-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: clamp(32px, 6vw, 96px);
+      align-items: start;
+    }
+
+    .categories-intro {
+      position: sticky;
+      top: calc(var(--header) + 32px);
+    }
+
+    .categories-intro .kicker {
+      margin: 0 0 14px;
+      color: var(--brand-2);
+      font-size: 0.75rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+    }
+
+    .categories-intro h2 {
+      margin: 0;
+      max-width: 14ch;
+      color: var(--ink);
+      font-size: clamp(2.1rem, 3.8vw, 3.3rem);
+      line-height: 1.1;
+      letter-spacing: -0.035em;
+    }
+
+    .categories-intro .lead {
+      max-width: 34ch;
+      margin: 22px 0 26px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .categories-contact {
+      color: var(--brand);
+      font-weight: 600;
+      text-decoration: underline;
+      text-underline-offset: 4px;
+    }
+
+    .categories-list {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .categories-list li + li {
+      border-top: 1px solid var(--line);
+    }
+
+    .category-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      padding: 28px 8px;
+      color: inherit;
+      text-decoration: none;
+      transition: background 0.2s ease, padding 0.2s ease;
+    }
+
+    .category-row:hover {
+      background: rgb(255 255 255 / 70%);
+      padding-inline: 18px;
+    }
+
+    .category-row h3 {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-size: clamp(1.4rem, 2.2vw, 1.9rem);
+      font-weight: 500;
+    }
+
+    .category-row p {
+      max-width: 52ch;
+      margin: 0 0 12px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .category-meta {
+      color: var(--brand);
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .category-row-arrow {
+      color: var(--brand);
+      font-size: 1.6rem;
+      transition: transform 0.2s ease;
+    }
+
+    .category-row:hover .category-row-arrow {
+      transform: translateX(6px);
+    }
+
+    @media (max-width: 900px) {
+      .categories-layout {
+        grid-template-columns: 1fr;
+        gap: 32px;
+      }
+
+      .categories-intro {
+        position: static;
+      }
+    }
+
+    @media (max-width: 600px) {
+      .categories-section {
+        padding-block: 54px;
+      }
+
+      .category-row {
+        padding-block: 22px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .category-row,
+      .category-row-arrow {
+        transition: none;
+      }
+    }
+  </style>
+
+  <Manufacturers />
+
+  <section class="pr-section">
+    <div class="wrap">
+      <div class="pr-head">
+        <div>
+          <h2>Productos destacados</h2>
+          <p>Una selección de equipos con sus datos clave. Pide la ficha técnica o una cotización.</p>
+        </div>
+        <a href="/productos">Ver todo el catálogo</a>
+      </div>
+      <div class="pr-grid">
+        {
+          featuredProducts.map((product) => (
+            <article class="pr-card">
+              <a class="pr-img" href={`/productos/${product.slug}`} tabindex="-1" aria-hidden="true">
+                <img src={product.image} alt="" loading="lazy" />
+              </a>
+              <div class="pr-body">
+                <small>{getCategory(product.category)?.name}</small>
+                <h3>{product.name}</h3>
+                <dl>
+                  {product.specs.slice(0, 2).map((spec) => (
+                    <div>
+                      <dt>{spec.label}</dt>
+                      <dd>{spec.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+                <div class="pr-actions">
+                  <a href="/contacto">Cotizar</a>
+                  <a href={`/productos/${product.slug}`}>Ficha técnica</a>
+                </div>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="services-band">
+    <div class="wrap">
+      <div>
+        <h2>Te acompañamos antes y después de la compra</h2>
+        <p class="lead">Un solo proveedor para elegir, instalar y mantener tus equipos.</p>
+        <a class="button button-light" href="/contacto">Hablar con un asesor</a>
+      </div>
+      <ol class="service-steps">
+        {
+          services.slice(0, 4).map((service, index) => (
+            <li>
+              <span>{index + 1}</span>
+              <div>
+                <b>{service.title}</b>
+                <p>{service.summary}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section-follow">
+    <div class="wrap">
+      <div class="section-head-row">
+        <div class="section-head section-head-flat">
+          <h2>Proyectos</h2>
+        </div>
+        <a class="button button-line" href="/proyectos">Ver proyectos</a>
+      </div>
+      <div class="project-grid">
+        {
+          projects.map((project) => (
+            <a class="project-card" href={`/proyectos#${project.slug}`}>
+              <div class="product-card-media">Foto del proyecto</div>
+              <div class="project-card-body">
+                <p class="kicker">{project.sector}</p>
+                <h3>{project.title}</h3>
+                <p>{project.summary}</p>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-band">
+    <div class="wrap cta-band-inner">
+      <div>
+        <h2>¿Necesita definir el equipo antes de comprar?</h2>
+        <p>Cuéntenos el método, la matriz y el rango. Le proponemos una configuración y el plan de soporte.</p>
+      </div>
+      <a class="button button-light" href="/contacto">Contactar</a>
+    </div>
+  </div>
+</MainLayout>
+<style>
+  .categories-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 24px;
+  }
+
+  .categories-grid > * {
+    min-width: 0;
+  }
+
+  @media (max-width: 1100px) {
+    .categories-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 600px) {
+    .categories-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+
+  .pr-section {
+    padding: 84px 0 96px;
+  }
+
+  .pr-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+
+  .pr-head h2 {
+    margin: 0 0 10px;
+  }
+
+  .pr-head p {
+    max-width: 46ch;
+    margin: 0;
+    color: var(--muted);
+  }
+
+  .pr-head > a {
+    color: var(--brand);
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 1px solid currentcolor;
+  }
+
+  .pr-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border-top: 1px solid var(--line);
+    border-left: 1px solid var(--line);
+  }
+
+  .pr-card {
+    display: flex;
+    flex-direction: column;
+    border-right: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    transition: background 0.2s ease;
+  }
+
+  .pr-card:hover {
+    background: var(--surface);
+  }
+
+  .pr-img {
+    display: grid;
+    height: 220px;
+    margin: 14px 14px 0;
+    place-items: center;
+    border-radius: 6px;
+    background:
+      radial-gradient(220px 150px at 50% 40%, #fff, transparent 75%),
+      linear-gradient(160deg, #eaeff9, #cfdaef);
+  }
+
+  .pr-img img {
+    width: 78%;
+    max-height: 200px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+    filter: drop-shadow(0 12px 12px rgb(15 27 61 / 22%));
+  }
+
+  .pr-body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    padding: 20px 24px 24px;
+  }
+
+  .pr-body small {
+    color: var(--brand);
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  .pr-body h3 {
+    margin: 4px 0 14px;
+    color: var(--ink);
+    font-size: 1.6rem;
+    font-weight: 500;
+    line-height: 1.15;
+  }
+
+  .pr-body dl {
+    flex: 1;
+    margin: 0 0 18px;
+    font-size: 0.9rem;
+  }
+
+  .pr-body dl div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 8px 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .pr-body dt {
+    color: var(--muted);
+  }
+
+  .pr-body dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .pr-actions {
+    display: flex;
+    gap: 10px;
+  }
+
+  .pr-actions a {
+    padding: 11px 16px;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .pr-actions a:first-child {
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .pr-actions a:first-child:hover {
+    background: var(--brand-2);
+  }
+
+  .pr-actions a:last-child {
+    border: 1px solid var(--line);
+    color: var(--brand);
+  }
+
+  @media (max-width: 1100px) {
+    .pr-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 720px) {
+    .pr-head {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .pr-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .services-band {
+    margin-bottom: 64px;
+  }
+
+  .section-follow {
+    padding-top: 64px;
+  }
+</style>

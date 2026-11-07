@@ -1,0 +1,35 @@
+---
+import type { Service } from '../data/services';
+
+interface Props {
+  service: Service;
+  index: number;
+  compact?: boolean;
+}
+
+const { service, index, compact = false } = Astro.props;
+const number = String(index + 1).padStart(2, '0');
+---
+
+{
+  compact ? (
+    <a class="service-card" href={`/servicios#${service.slug}`}>
+      <span class="service-index">{number}</span>
+      <h3>{service.title}</h3>
+      <p>{service.summary}</p>
+    </a>
+  ) : (
+    <article class="service-block" id={service.slug}>
+      <div>
+        <p class="service-index">{number}</p>
+        <h2>{service.title}</h2>
+        <p class="lead">{service.body}</p>
+      </div>
+      <ul>
+        {service.points.map((point) => (
+          <li>{point}</li>
+        ))}
+      </ul>
+    </article>
+  )
+}

@@ -1,0 +1,141 @@
+---
+const lines = [
+  {
+    name: 'Teledyne Leeman Labs',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/TELEDYNE-LEEMAN-LABS_.png',
+    description: 'Espectrometría ICP-OES y análisis de mercurio.',
+  },
+  {
+    name: 'Teledyne Tekmar',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/TELEDYNE-TEKMAR_.png',
+    description: 'Preparación de muestras para cromatografía de gases y análisis de TOC.',
+  },
+  {
+    name: 'Teledyne CETAC',
+    image: 'https://bdinstruments.com/wp-content/uploads/2023/04/TELEDYNE-CETAC_.png',
+    description: 'Introducción de muestras para ICP, ablación láser y automuestreadores.',
+  },
+  {
+    name: 'Teledyne Hanson',
+    image: 'https://bdinstruments.com/wp-content/uploads/2026/03/TELDEYNE-2.png',
+    description: 'Equipos de disolución para control de calidad farmacéutico.',
+  },
+];
+---
+
+<section class="mf-section" aria-label="Fabricantes que representamos">
+  <div class="wrap">
+    <div class="mf-heading">
+      <h2>Fabricantes que representamos</h2>
+      <p>
+        Trabajamos con marcas especializadas en análisis instrumental y
+        preparación de muestras.
+      </p>
+    </div>
+
+    <ul class="mf-list">
+      {
+        lines.map((line) => (
+          <li>
+            <div class="mf-logo">
+              <img src={line.image} alt={line.name} loading="lazy" decoding="async" />
+            </div>
+            <p class="mf-desc">{line.description}</p>
+            <a class="mf-link" href="/productos">
+              Ver línea <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .mf-section {
+    padding: 88px 0 96px;
+    color: #fff;
+    background: linear-gradient(135deg, #0a1330, #0f1b3d 60%, #0b2f7e 140%);
+  }
+
+  .mf-heading {
+    max-width: 560px;
+    margin-bottom: 44px;
+  }
+
+  .mf-heading h2 {
+    margin: 0 0 16px;
+    color: #fff;
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+  }
+
+  .mf-heading p {
+    margin: 0;
+    color: #c7d3f2;
+  }
+
+  .mf-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid rgb(255 255 255 / 22%);
+  }
+
+  .mf-list li {
+    display: grid;
+    grid-template-columns: 270px 1fr auto;
+    align-items: center;
+    gap: 32px;
+    padding: 22px 0;
+    border-bottom: 1px solid rgb(255 255 255 / 22%);
+  }
+
+  .mf-logo {
+    display: flex;
+    height: 76px;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .mf-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+  }
+
+  .mf-desc {
+    margin: 0;
+    color: #fff;
+  }
+
+  .mf-link {
+    color: #8db4ff;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .mf-link:hover {
+    color: #fff;
+  }
+
+  @media (max-width: 800px) {
+    .mf-section {
+      padding: 52px 0;
+    }
+
+    .mf-list li {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    .mf-logo {
+      max-width: 260px;
+    }
+  }
+</style>

@@ -1,0 +1,85 @@
+---
+import ProductCard from '../../components/ProductCard.astro';
+import { getCategory } from '../../data/categories';
+import { products } from '../../data/products';
+import type { Product } from '../../data/products';
+import MainLayout from '../../layouts/MainLayout.astro';
+
+export function getStaticPaths() {
+  return products.map((product) => ({
+    params: { slug: product.slug },
+    props: { product },
+  }));
+}
+
+interface Props {
+  product: Product;
+}
+
+const { product } = Astro.props;
+const category = getCategory(product.category);
+const related = products
+  .filter((item) => item.category === product.category && item.slug !== product.slug)
+  .slice(0, 3);
+---
+
+<MainLayout title={product.name} description={product.summary}>
+  <header class="page-hero">
+    <div class="wrap">
+      <nav class="crumb" aria-label="Ruta">
+        <a href="/">Inicio</a>
+        <span aria-hidden="true">/</span>
+        <a href="/productos">Productos</a>
+        <span aria-hidden="true">/</span>
+        <span>{product.name}</span>
+      </nav>
+      <p class="kicker">{category?.name}</p>
+      <h1>{product.name}</h1>
+      <p class="lead">{product.summary}</p>
+    </div>
+  </header>
+
+  <div class="wrap detail">
+    <div class="media-placeholder detail-placeholder">Foto del producto</div>
+    <div class="detail-copy">
+      <p>{product.description}</p>
+      <h2>Aplicaciones</h2>
+      <ul class="tag-list">
+        {product.applications.map((application) => <li>{application}</li>)}
+      </ul>
+      <h2>Qué se define al cotizar</h2>
+      <p>Estos puntos orientan la conversación. La marca, el modelo y los valores de trabajo se confirman en la propuesta.</p>
+      <table class="spec-table">
+        <tbody>
+          {
+            product.specs.map((spec) => (
+              <tr>
+                <th scope="row">{spec.label}</th>
+                <td>{spec.value}</td>
+              </tr>
+            ))
+          }
+        </tbody>
+      </table>
+      <a class="button" href={`/contacto?interes=${encodeURIComponent(product.name)}`}>Cotizar este equipo</a>
+    </div>
+  </div>
+
+  {
+    related.length > 0 && (
+      <section class="section section-follow">
+        <div class="wrap">
+          <div class="section-head">
+            <p class="kicker">Relacionados</p>
+            <h2>Otros equipos de {category?.name}</h2>
+          </div>
+          <div class="product-grid">
+            {related.map((item) => (
+              <ProductCard product={item} />
+            ))}
+          </div>
+        </div>
+      </section>
+    )
+  }
+</MainLayout>

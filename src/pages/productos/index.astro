@@ -1,0 +1,89 @@
+---
+import ProductCard from '../../components/ProductCard.astro';
+import { categories } from '../../data/categories';
+import { products } from '../../data/products';
+import MainLayout from '../../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Catálogo"
+  description="Catálogo de instrumentos de laboratorio: análisis, microbiología, pesaje, temperatura, bioseguridad y consumibles."
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="kicker">Productos</p>
+      <h1>Catálogo de instrumentos</h1>
+      <p class="lead">
+        Filtre por área y abra la ficha para ver aplicaciones, especificaciones y cómo pedir una cotización.
+      </p>
+      <div class="filters" data-filters>
+        <a class="filter-chip" href="/productos" data-filter="all">Todos</a>
+        {
+          categories.map((category) => (
+            <a class="filter-chip" href={`/productos?categoria=${category.slug}`} data-filter={category.slug}>
+              {category.name}
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="product-grid" id="catalogo">
+      {products.map((product) => <ProductCard product={product} />)}
+    </div>
+    <p class="empty-note" id="catalogo-vacio" hidden>No hay equipos en esta categoría.</p>
+  </div>
+
+  <div class="cta-band">
+    <div class="wrap cta-band-inner">
+      <div>
+        <h2>¿No encuentra el rango que necesita?</h2>
+        <p>Escríbanos el método y las condiciones de trabajo. Buscamos la configuración que encaja.</p>
+      </div>
+      <a class="button button-light" href="/contacto">Pedir asesoría</a>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  function applyCatalogFilter() {
+    const catalog = document.querySelector('#catalogo');
+    if (!catalog) return;
+
+    const requested = new URLSearchParams(location.search).get('categoria') || 'all';
+    const known = new Set(
+      [...document.querySelectorAll<HTMLElement>('[data-product]')].map((item) => item.dataset.category),
+    );
+    const category = requested === 'all' || known.has(requested) ? requested : 'all';
+    let visible = 0;
+
+    document.querySelectorAll<HTMLElement>('[data-product]').forEach((item) => {
+      const match = category === 'all' || item.dataset.category === category;
+      item.hidden = !match;
+      if (match) visible += 1;
+    });
+
+    const empty = document.querySelector<HTMLElement>('#catalogo-vacio');
+    if (empty) empty.hidden = visible !== 0;
+
+    document.querySelectorAll<HTMLAnchorElement>('[data-filter]').forEach((link) => {
+      const active = link.dataset.filter === category;
+      if (active) link.setAttribute('aria-current', 'true');
+      else link.removeAttribute('aria-current');
+    });
+  }
+
+  document.querySelectorAll<HTMLAnchorElement>('[data-filter]').forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault();
+      const url = new URL(link.href);
+      history.pushState({}, '', `${url.pathname}${url.search}`);
+      applyCatalogFilter();
+    });
+  });
+
+  window.addEventListener('popstate', applyCatalogFilter);
+  applyCatalogFilter();
+</script>

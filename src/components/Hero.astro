@@ -1,0 +1,563 @@
+---
+import { products } from '../data/products';
+
+const carouselImages = [
+  'https://bdinstruments.com/wp-content/uploads/2024/06/p1-2.png',
+  'https://bdinstruments.com/wp-content/uploads/2024/06/2p.png',
+  'https://bdinstruments.com/wp-content/uploads/2024/06/3.jpg',
+];
+const carouselProducts = products.filter((product) => product.featured).slice(0, carouselImages.length);
+const categoryLabels: Record<string, string> = {
+  analitica: 'Instrumentación analítica',
+  microbiologia: 'Microbiología',
+  pesaje: 'Pesaje',
+  temperatura: 'Temperatura',
+};
+---
+
+<section class="bd-hero" aria-labelledby="hero-title">
+  <div class="bd-hero-carousel" data-hero-carousel aria-roledescription="carrusel" aria-label="Equipos destacados">
+    <div class="bd-hero-slides" aria-live="polite">
+      {
+        carouselProducts.map((product, index) => (
+          <article
+            class:list={['bd-hero-slide', { 'is-active': index === 0 }]}
+            data-hero-slide
+            aria-hidden={index !== 0 ? 'true' : 'false'}
+            aria-label={`${index + 1} de ${carouselProducts.length}: ${product.name}`}
+          >
+            <img src={carouselImages[index]} alt={product.name} width="400" height="300" />
+            <div class="bd-hero-caption">
+              <span>{categoryLabels[product.category] ?? 'Equipos de laboratorio'}</span>
+              <h2>{product.name}</h2>
+              <p>{product.summary}</p>
+              <a href={`/productos/${product.slug}`}>Ver equipo <span aria-hidden="true">→</span></a>
+            </div>
+          </article>
+        ))
+      }
+    </div>
+
+    <div class="bd-hero-controls">
+      <div class="bd-hero-dots" aria-label="Seleccionar equipo destacado">
+        {
+          carouselProducts.map((product, index) => (
+            <button
+              type="button"
+              data-hero-dot
+              aria-label={`Mostrar ${product.name}`}
+              aria-pressed={index === 0 ? 'true' : 'false'}
+              class:list={['bd-hero-dot', { 'is-active': index === 0 }]}
+            />
+          ))
+        }
+      </div>
+      <button class="bd-hero-arrow" type="button" data-hero-previous aria-label="Equipo anterior">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m15 5-7 7 7 7" /></svg>
+      </button>
+      <button class="bd-hero-arrow" type="button" data-hero-next aria-label="Equipo siguiente">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 5 7 7-7 7" /></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="bd-hero-content">
+    <div class="bd-hero-grid" aria-hidden="true"></div>
+    <svg class="bd-hero-lines" viewBox="0 0 700 700" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+      <g fill="none" stroke-width="1.2">
+        <path d="M380 0L700 520" stroke="#6FA0FF" stroke-opacity=".55" />
+        <path d="M450 0L700 400" stroke="#6FA0FF" stroke-opacity=".3" />
+        <path d="M530 0L700 300" stroke="#fff" stroke-opacity=".15" />
+        <path d="M700 140L330 700" stroke="#6FA0FF" stroke-opacity=".4" />
+        <path d="M700 300L480 700" stroke="#fff" stroke-opacity=".15" />
+      </g>
+    </svg>
+
+    <div class="bd-hero-copy">
+      <div class="bd-hero-seal" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path d="M9 3h6M10 3v6l-5 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-5-9V3" />
+        </svg>
+      </div>
+
+      <h1 class="bd-hero-title" id="hero-title">
+        Tecnología y precisión para <span>tu laboratorio</span>
+      </h1>
+
+      <p class="bd-hero-lead">
+        Equipos de laboratorio e instrumentación analítica, con asesoría especializada,
+        instalación y soporte técnico para acompañarte en cada etapa.
+      </p>
+
+      <div class="bd-hero-actions">
+        <a class="button" href="/contacto">
+          Solicitar cotización <span aria-hidden="true">→</span>
+        </a>
+        <a class="button button-line" href="/productos">Ver catálogo</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll<HTMLElement>('[data-hero-carousel]').forEach((carousel) => {
+    const slides = [...carousel.querySelectorAll<HTMLElement>('[data-hero-slide]')];
+    const dots = [...carousel.querySelectorAll<HTMLButtonElement>('[data-hero-dot]')];
+    const previous = carousel.querySelector<HTMLButtonElement>('[data-hero-previous]');
+    const next = carousel.querySelector<HTMLButtonElement>('[data-hero-next]');
+    if (slides.length < 2 || !previous || !next) return;
+
+    let activeIndex = 0;
+    let timer: ReturnType<typeof setInterval> | undefined;
+
+    const showSlide = (index: number) => {
+      activeIndex = (index + slides.length) % slides.length;
+      slides.forEach((slide, slideIndex) => {
+        const active = slideIndex === activeIndex;
+        slide.classList.toggle('is-active', active);
+        slide.setAttribute('aria-hidden', String(!active));
+      });
+      dots.forEach((dot, dotIndex) => {
+        const active = dotIndex === activeIndex;
+        dot.classList.toggle('is-active', active);
+        dot.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    const stopAutoplay = () => {
+      if (timer) clearInterval(timer);
+      timer = undefined;
+    };
+    const startAutoplay = () => {
+      stopAutoplay();
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      timer = setInterval(() => showSlide(activeIndex + 1), 6000);
+    };
+
+    previous.addEventListener('click', () => {
+      showSlide(activeIndex - 1);
+      startAutoplay();
+    });
+    next.addEventListener('click', () => {
+      showSlide(activeIndex + 1);
+      startAutoplay();
+    });
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        showSlide(index);
+        startAutoplay();
+      });
+    });
+    carousel.addEventListener('mouseenter', stopAutoplay);
+    carousel.addEventListener('mouseleave', startAutoplay);
+    carousel.addEventListener('focusin', stopAutoplay);
+    carousel.addEventListener('focusout', (event) => {
+      if (!carousel.contains(event.relatedTarget as Node | null)) startAutoplay();
+    });
+    startAutoplay();
+  });
+</script>
+
+<style>
+  .bd-hero {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: min(700px, calc(100svh - var(--header)));
+    color: #fff;
+    background: #0a1330;
+  }
+
+  .bd-hero-carousel {
+    position: relative;
+    min-width: 0;
+    min-height: 560px;
+    overflow: hidden;
+    background:
+      radial-gradient(540px 400px at 50% 40%, #fff 0%, transparent 72%),
+      linear-gradient(160deg, #eaeff9, #c9d5ec);
+  }
+
+  .bd-hero-slides,
+  .bd-hero-slide {
+    position: absolute;
+    inset: 0;
+  }
+
+  .bd-hero-slide {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 24px 24px 130px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 450ms ease, visibility 450ms ease;
+  }
+
+  .bd-hero-slide.is-active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .bd-hero-slide > img {
+    display: block;
+    width: min(100%, 640px);
+    height: min(58vh, 480px);
+    min-height: 280px;
+    margin: 0 auto;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  .bd-hero-caption {
+    position: absolute;
+    right: 36px;
+    bottom: 28px;
+    left: 36px;
+    max-width: 560px;
+  }
+
+  .bd-hero-caption > span {
+    color: #5b6785;
+    font-size: 0.85rem;
+  }
+
+  .bd-hero-caption h2 {
+    margin: 2px 0 4px;
+    color: #0f1b3d;
+    font-family: var(--serif);
+    font-size: clamp(1.45rem, 2.2vw, 1.8rem);
+    font-weight: 500;
+    line-height: 1.2;
+  }
+
+  .bd-hero-caption p {
+    display: -webkit-box;
+    overflow: hidden;
+    margin: 0 0 8px;
+    color: #33405f;
+    font-size: 0.875rem;
+    line-height: 1.45;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  .bd-hero-caption a {
+    color: #0b3d9c;
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .bd-hero-controls {
+    position: absolute;
+    right: 28px;
+    bottom: 24px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .bd-hero-dots {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-right: 6px;
+  }
+
+  .bd-hero-dot {
+    width: 9px;
+    height: 9px;
+    padding: 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(15, 27, 61, 0.25);
+    cursor: pointer;
+  }
+
+  .bd-hero-dot.is-active {
+    width: 22px;
+    background: #0b3d9c;
+  }
+
+  .bd-hero-arrow {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid rgba(15, 27, 61, 0.35);
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.6);
+    color: #0f1b3d;
+    cursor: pointer;
+  }
+
+  .bd-hero-arrow:hover {
+    background: rgba(255, 255, 255, 0.9);
+  }
+
+  .bd-hero-arrow svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 2;
+  }
+
+  .bd-hero-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    padding: 68px clamp(36px, 5.2vw, 80px);
+    overflow: hidden;
+    background: linear-gradient(135deg, #0a1330, #0f1b3d 60%, #0b2f7e 140%);
+  }
+
+  .bd-hero-grid,
+  .bd-hero-lines {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+  }
+
+  .bd-hero-grid {
+    background-image:
+      linear-gradient(rgba(111, 160, 255, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(111, 160, 255, 0.08) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(ellipse at 80% 30%, #000 0%, transparent 70%);
+  }
+
+  .bd-hero-lines {
+    z-index: 0;
+  }
+
+  .bd-hero-copy {
+    position: relative;
+    z-index: 1;
+    width: min(100%, 600px);
+  }
+
+  .bd-hero-seal {
+    display: grid;
+    place-items: center;
+    width: 58px;
+    height: 58px;
+    margin-bottom: 30px;
+    border: 1.5px solid rgba(255, 255, 255, 0.7);
+    border-radius: 50%;
+  }
+
+  .bd-hero-seal svg {
+    width: 28px;
+    height: 28px;
+    fill: none;
+    stroke: #fff;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .bd-hero-title {
+    max-width: 13ch;
+    margin: 0 0 24px;
+    color: #fff;
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 4.1vw, 4.1rem);
+    font-weight: 400;
+    line-height: 1.06;
+    letter-spacing: -0.02em;
+  }
+
+  .bd-hero-title span,
+  .bd-hero-lead {
+    color: #fff;
+  }
+
+  .bd-hero-lead {
+    max-width: 46ch;
+    margin: 0 0 28px;
+    font-size: 1.05rem;
+    line-height: 1.65;
+  }
+
+  .bd-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .bd-hero .button {
+    min-height: 64px;
+    padding: 0.9rem 1.5rem;
+    border: 2px solid #fff;
+    border-radius: 14px;
+    background: #fff;
+    color: #0b3d9c;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
+  }
+
+  .bd-hero .button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+  }
+
+  .bd-hero .button-line {
+    border-color: rgba(255, 255, 255, 0.5);
+    background: transparent;
+    color: #fff;
+  }
+
+  .bd-hero .button-line:hover {
+    background: rgba(255, 255, 255, 0.1);
+  }
+
+  .bd-hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 18px 30px;
+    max-width: 520px;
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .bd-hero-stats div {
+    display: grid;
+    gap: 3px;
+  }
+
+  .bd-hero-stats strong {
+    color: #fff;
+    font-family: var(--serif);
+    font-size: clamp(1.7rem, 2.7vw, 2.2rem);
+    font-weight: 400;
+    line-height: 1.1;
+  }
+
+  .bd-hero-stats span {
+    color: #d5def5;
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 900px) {
+    .bd-hero {
+      grid-template-columns: 1fr;
+    }
+
+    .bd-hero-content {
+      grid-row: 1;
+      padding: 56px 32px;
+    }
+
+    .bd-hero-carousel {
+      min-height: 540px;
+    }
+
+    .bd-hero-slide {
+      padding-inline: 28px;
+    }
+
+    .bd-hero-caption {
+      right: 28px;
+      left: 28px;
+    }
+  }
+
+  @media (max-width: 620px) {
+    .bd-hero-content {
+      padding: 44px 20px;
+    }
+
+    .bd-hero-title {
+      font-size: clamp(2.35rem, 10vw, 3.5rem);
+    }
+
+    .bd-hero-seal {
+      width: 48px;
+      height: 48px;
+      margin-bottom: 24px;
+    }
+
+    .bd-hero .button {
+      min-height: 56px;
+      padding: 0.8rem 1.1rem;
+    }
+
+    .bd-hero-stats {
+      gap: 16px 22px;
+    }
+
+    .bd-hero-stats span {
+      max-width: 100px;
+    }
+
+    .bd-hero-carousel {
+      min-height: 480px;
+    }
+
+    .bd-hero-slide {
+      padding: 30px 20px 145px;
+    }
+
+    .bd-hero-slide > img {
+      height: 240px;
+      min-height: 180px;
+    }
+
+    .bd-hero-caption {
+      right: 20px;
+      bottom: 24px;
+      left: 20px;
+    }
+
+    .bd-hero-controls {
+      right: 18px;
+      bottom: 18px;
+      gap: 7px;
+    }
+
+    .bd-hero-dots {
+      gap: 5px;
+      margin-right: 2px;
+    }
+
+    .bd-hero-arrow {
+      width: 38px;
+      height: 38px;
+    }
+  }
+
+  @media (max-width: 390px) {
+    .bd-hero-caption {
+      bottom: 72px;
+    }
+
+    .bd-hero-controls {
+      right: auto;
+      left: 20px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bd-hero-slide,
+    .bd-hero .button {
+      transition: none;
+    }
+
+    .bd-hero .button:hover {
+      transform: none;
+    }
+  }
+</style>

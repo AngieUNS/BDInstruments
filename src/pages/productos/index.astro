@@ -3,6 +3,8 @@ import ProductCard from '../../components/ProductCard.astro';
 import { categories } from '../../data/categories';
 import { products } from '../../data/products';
 import MainLayout from '../../layouts/MainLayout.astro';
+
+const pageSize = 21;
 ---
 
 <MainLayout
@@ -31,9 +33,22 @@ import MainLayout from '../../layouts/MainLayout.astro';
 
   <div class="wrap">
     <div class="product-grid" id="catalogo">
-      {products.map((product) => <ProductCard product={product} />)}
+      {products.map((product, index) => <ProductCard product={product} hidden={index >= pageSize} />)}
     </div>
     <p class="empty-note" id="catalogo-vacio" hidden>No hay equipos en esta categoría.</p>
+    <nav class="pagination" id="paginacion" aria-label="Paginación del catálogo" hidden>
+      <p class="pagination-summary" id="pagina-actual" aria-live="polite"></p>
+      <div class="pagination-controls">
+        <a class="pagination-link pagination-direction" id="pagina-anterior" rel="prev">
+          <span aria-hidden="true">←</span> Anterior
+        </a>
+        <div class="pagination-pages" id="paginas"></div>
+        <a class="pagination-link pagination-direction" id="pagina-siguiente" rel="next">
+          Siguiente <span aria-hidden="true">→</span>
+        </a>
+      </div>
+    </nav>
+    <noscript>Active JavaScript para filtrar los productos y navegar por las páginas del catálogo.</noscript>
   </div>
 
   <div class="cta-band">
@@ -48,25 +63,84 @@ import MainLayout from '../../layouts/MainLayout.astro';
 </MainLayout>
 
 <script>
+  const pageSize = 21;
+
   function applyCatalogFilter() {
     const catalog = document.querySelector('#catalogo');
     if (!catalog) return;
 
-    const requested = new URLSearchParams(location.search).get('categoria') || 'all';
+    const params = new URLSearchParams(location.search);
+    const requested = params.get('categoria') || 'all';
     const known = new Set(
-      [...document.querySelectorAll<HTMLElement>('[data-product]')].map((item) => item.dataset.category),
+      [...document.querySelectorAll<HTMLAnchorElement>('[data-filter]')].map((link) => link.dataset.filter),
     );
     const category = requested === 'all' || known.has(requested) ? requested : 'all';
-    let visible = 0;
-
-    document.querySelectorAll<HTMLElement>('[data-product]').forEach((item) => {
-      const match = category === 'all' || item.dataset.category === category;
-      item.hidden = !match;
-      if (match) visible += 1;
-    });
+    const items = [...catalog.querySelectorAll<HTMLElement>('[data-product]')];
+    const matching = items.filter((item) => category === 'all' || item.dataset.category === category);
+    const totalPages = Math.max(1, Math.ceil(matching.length / pageSize));
+    const requestedPage = params.get('pagina') || '1';
+    const parsedPage = /^[1-9]\d*$/.test(requestedPage) ? Number(requestedPage) : 1;
+    const page = Number.isSafeInteger(parsedPage) ? Math.min(parsedPage, totalPages) : 1;
+    const visible = new Set(matching.slice((page - 1) * pageSize, page * pageSize));
+    items.forEach((item) => { item.hidden = !visible.has(item); });
 
     const empty = document.querySelector<HTMLElement>('#catalogo-vacio');
-    if (empty) empty.hidden = visible !== 0;
+    if (empty) empty.hidden = matching.length !== 0;
+
+    const pagination = document.querySelector<HTMLElement>('#paginacion');
+    const currentPage = document.querySelector<HTMLElement>('#pagina-actual');
+    if (pagination) pagination.hidden = totalPages <= 1;
+    if (currentPage) {
+      const start = (page - 1) * pageSize + 1;
+      const end = Math.min(page * pageSize, matching.length);
+      currentPage.textContent = `Mostrando ${start}–${end} de ${matching.length} productos`;
+    }
+
+    function pageUrl(target: number) {
+      const url = new URL(location.href);
+      if (category === 'all') url.searchParams.delete('categoria');
+      else url.searchParams.set('categoria', category);
+      if (target === 1) url.searchParams.delete('pagina');
+      else url.searchParams.set('pagina', String(target));
+      return url.pathname + url.search;
+    }
+
+    function setPageLink(selector: string, target: number, enabled: boolean) {
+      const link = document.querySelector<HTMLAnchorElement>(selector);
+      if (!link) return;
+      link.hidden = !enabled;
+      link.href = pageUrl(target);
+    }
+
+    setPageLink('#pagina-anterior', page - 1, page > 1);
+    setPageLink('#pagina-siguiente', page + 1, page < totalPages);
+
+    const pages = document.querySelector<HTMLElement>('#paginas');
+    if (pages) {
+      pages.replaceChildren();
+      const pageNumbers = new Set([1, totalPages]);
+      for (let number = Math.max(1, page - 1); number <= Math.min(totalPages, page + 1); number++) {
+        pageNumbers.add(number);
+      }
+      let previous = 0;
+      [...pageNumbers].sort((a, b) => a - b).forEach((number) => {
+        if (number - previous > 1) {
+          const ellipsis = document.createElement('span');
+          ellipsis.className = 'pagination-ellipsis';
+          ellipsis.textContent = '…';
+          ellipsis.setAttribute('aria-hidden', 'true');
+          pages.append(ellipsis);
+        }
+        const link = document.createElement('a');
+        link.className = 'pagination-link pagination-number';
+        link.href = pageUrl(number);
+        link.textContent = String(number);
+        link.setAttribute('aria-label', `Página ${number}`);
+        if (number === page) link.setAttribute('aria-current', 'page');
+        pages.append(link);
+        previous = number;
+      });
+    }
 
     document.querySelectorAll<HTMLAnchorElement>('[data-filter]').forEach((link) => {
       const active = link.dataset.filter === category;
@@ -75,15 +149,98 @@ import MainLayout from '../../layouts/MainLayout.astro';
     });
   }
 
-  document.querySelectorAll<HTMLAnchorElement>('[data-filter]').forEach((link) => {
-    link.addEventListener('click', (event) => {
-      event.preventDefault();
-      const url = new URL(link.href);
-      history.pushState({}, '', `${url.pathname}${url.search}`);
-      applyCatalogFilter();
-    });
+  document.addEventListener('click', (event) => {
+    if (!(event.target instanceof Element)) return;
+    const link = event.target.closest<HTMLAnchorElement>('[data-filter], .pagination-link');
+    if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
+    const url = new URL(link.href);
+    history.pushState({}, '', `${url.pathname}${url.search}`);
+    applyCatalogFilter();
+    if (link.classList.contains('pagination-link')) {
+      document.querySelector('#catalogo')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
   });
 
   window.addEventListener('popstate', applyCatalogFilter);
   applyCatalogFilter();
 </script>
+
+<style>
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    margin: 36px 0 48px;
+    padding: 20px 24px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .pagination-summary {
+    color: var(--muted);
+    font-size: 0.875rem;
+  }
+
+  .pagination-controls,
+  .pagination-pages {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .pagination :global(.pagination-link) {
+    display: inline-flex;
+    min-width: 40px;
+    min-height: 40px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 12px;
+    border: 1px solid transparent;
+    border-radius: 9px;
+    color: var(--brand);
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+  }
+
+  .pagination :global(.pagination-link:hover) {
+    border-color: var(--line);
+    background: var(--tint);
+  }
+
+  .pagination :global(.pagination-number[aria-current='page']) {
+    border-color: var(--brand);
+    background: var(--brand);
+    color: #fff;
+  }
+
+  .pagination :global(.pagination-ellipsis) {
+    padding: 0 5px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 600px) {
+    .pagination {
+      justify-content: center;
+      padding: 18px 12px;
+    }
+
+    .pagination-controls {
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .pagination :global(.pagination-link) {
+      transition: none;
+    }
+  }
+</style>

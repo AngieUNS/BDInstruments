@@ -1,39 +1,34 @@
 
 ---
 import { getCategory } from '../data/categories';
-import type { Product } from '../data/products';
+import type { ProductCardItem } from '../data/products';
 
 interface Props {
-  product: Product;
+  product: ProductCardItem;
+  hidden?: boolean;
 }
 
-const { product } = Astro.props;
+const { product, hidden = false } = Astro.props;
 const category = getCategory(product.category);
-
-// Agrega image a Product si aún no existe esa propiedad.
-const image = 'image' in product ? product.image : undefined;
+const href = product.href === undefined ? `/productos/${product.slug}` : product.href;
+const CardLink = href ? 'a' : 'div';
 ---
 
 <article
     class="product-card"
     data-product
     data-category={product.category}
+    hidden={hidden}
 >
-  <a class="product-card-link" href={`/productos/${product.slug}`}>
+  <CardLink class="product-card-link" href={href || undefined}>
     <div class="product-card-media">
-      {image ? (
-          <img
-              src={image}
-              alt={product.name}
-              loading="lazy"
-              width="600"
-              height="480"
-          />
-      ) : (
-          <div class="product-card-placeholder">
-            <span>Imagen próximamente</span>
-          </div>
-      )}
+      <img
+          src={product.image}
+          alt={product.name}
+          loading="lazy"
+          width="600"
+          height="480"
+      />
 
       <span class="product-card-arrow" aria-hidden="true">↗</span>
     </div>
@@ -44,12 +39,15 @@ const image = 'image' in product ? product.image : undefined;
       )}
 
       <h3>{product.name}</h3>
+      <p class="product-card-brand">{product.brand}</p>
 
-      <p class="product-card-summary">{product.summary}</p>
+      {product.summary && <p class="product-card-summary">{product.summary}</p>}
 
-      <span class="product-card-cta">Consultar equipo <span aria-hidden="true">→</span></span>
+      {href && (
+        <span class="product-card-cta">Consultar equipo <span aria-hidden="true">→</span></span>
+      )}
     </div>
-  </a>
+  </CardLink>
 </article>
 
 <style>
@@ -83,7 +81,7 @@ const image = 'image' in product ? product.image : undefined;
   .product-card-media {
     position: relative;
     display: grid;
-    aspect-ratio: 5 / 4;
+    height: 230px;
     place-items: center;
     overflow: hidden;
     margin: 14px 14px 0;
@@ -97,8 +95,9 @@ const image = 'image' in product ? product.image : undefined;
     display: block;
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
     object-fit: contain;
-    padding: 18px;
+    padding: 28px;
     mix-blend-mode: multiply;
     transition: transform 0.35s ease;
   }
@@ -170,6 +169,17 @@ const image = 'image' in product ? product.image : undefined;
     line-height: 1.7;
   }
 
+  .product-card-brand {
+    margin: 8px 0 20px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .product-card-brand:has(+ .product-card-summary) {
+    margin-bottom: 0;
+  }
+
   .product-card-cta {
     display: inline-flex;
     align-items: center;
@@ -195,4 +205,3 @@ const image = 'image' in product ? product.image : undefined;
     }
   }
 </style>
-

@@ -198,14 +198,17 @@ import MainLayout from '../layouts/MainLayout.astro';
               <div class="pr-body">
                 <small>{getCategory(product.category)?.name}</small>
                 <h3>{product.name}</h3>
-                <dl>
-                  {product.specs.slice(0, 2).map((spec) => (
-                    <div>
-                      <dt>{spec.label}</dt>
-                      <dd>{spec.value}</dd>
-                    </div>
-                  ))}
-                </dl>
+                <p class="pr-brand">{product.brand}</p>
+                {product.specs && product.specs.length > 0 && (
+                  <dl>
+                    {product.specs.slice(0, 2).map((spec) => (
+                      <div>
+                        <dt>{spec.label}</dt>
+                        <dd>{spec.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
                 <div class="pr-actions">
                   <a href="/contacto">Cotizar</a>
                   <a href={`/productos/${product.slug}`}>Ficha técnica</a>
@@ -218,63 +221,7 @@ import MainLayout from '../layouts/MainLayout.astro';
     </div>
   </section>
 
-  <section class="services-band">
-    <div class="wrap">
-      <div>
-        <h2>Te acompañamos antes y después de la compra</h2>
-        <p class="lead">Un solo proveedor para elegir, instalar y mantener tus equipos.</p>
-        <a class="button button-light" href="/contacto">Hablar con un asesor</a>
-      </div>
-      <ol class="service-steps">
-        {
-          services.slice(0, 4).map((service, index) => (
-            <li>
-              <span>{index + 1}</span>
-              <div>
-                <b>{service.title}</b>
-                <p>{service.summary}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ol>
-    </div>
-  </section>
 
-  <section class="section section-follow">
-    <div class="wrap">
-      <div class="section-head-row">
-        <div class="section-head section-head-flat">
-          <h2>Proyectos</h2>
-        </div>
-        <a class="button button-line" href="/proyectos">Ver proyectos</a>
-      </div>
-      <div class="project-grid">
-        {
-          projects.map((project) => (
-            <a class="project-card" href={`/proyectos#${project.slug}`}>
-              <div class="product-card-media">Foto del proyecto</div>
-              <div class="project-card-body">
-                <p class="kicker">{project.sector}</p>
-                <h3>{project.title}</h3>
-                <p>{project.summary}</p>
-              </div>
-            </a>
-          ))
-        }
-      </div>
-    </div>
-  </section>
-
-  <div class="cta-band">
-    <div class="wrap cta-band-inner">
-      <div>
-        <h2>¿Necesita definir el equipo antes de comprar?</h2>
-        <p>Cuéntenos el método, la matriz y el rango. Le proponemos una configuración y el plan de soporte.</p>
-      </div>
-      <a class="button button-light" href="/contacto">Contactar</a>
-    </div>
-  </div>
 </MainLayout>
 <style>
   .categories-grid {
@@ -384,11 +331,18 @@ import MainLayout from '../layouts/MainLayout.astro';
   }
 
   .pr-body h3 {
-    margin: 4px 0 14px;
+    margin: 4px 0 8px;
     color: var(--ink);
     font-size: 1.6rem;
     font-weight: 500;
     line-height: 1.15;
+  }
+
+  .pr-brand {
+    margin: 0 0 18px;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 600;
   }
 
   .pr-body dl {

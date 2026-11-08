@@ -1,18 +1,8 @@
 ---
-import { products } from '../data/products';
+import { getCategory } from '../data/categories';
+import { instrumentationProducts } from '../data/products';
 
-const carouselImages = [
-  'https://bdinstruments.com/wp-content/uploads/2024/06/p1-2.png',
-  'https://bdinstruments.com/wp-content/uploads/2024/06/2p.png',
-  'https://bdinstruments.com/wp-content/uploads/2024/06/3.jpg',
-];
-const carouselProducts = products.filter((product) => product.featured).slice(0, carouselImages.length);
-const categoryLabels: Record<string, string> = {
-  analitica: 'Instrumentación analítica',
-  microbiologia: 'Microbiología',
-  pesaje: 'Pesaje',
-  temperatura: 'Temperatura',
-};
+const carouselProducts = instrumentationProducts.slice(0, 3);
 ---
 
 <section class="bd-hero" aria-labelledby="hero-title">
@@ -26,9 +16,9 @@ const categoryLabels: Record<string, string> = {
             aria-hidden={index !== 0 ? 'true' : 'false'}
             aria-label={`${index + 1} de ${carouselProducts.length}: ${product.name}`}
           >
-            <img src={carouselImages[index]} alt={product.name} width="400" height="300" />
+            <img src={product.image} alt={product.name} width="400" height="300" />
             <div class="bd-hero-caption">
-              <span>{categoryLabels[product.category] ?? 'Equipos de laboratorio'}</span>
+              <span>{getCategory(product.category)?.name}</span>
               <h2>{product.name}</h2>
               <p>{product.summary}</p>
               <a href={`/productos/${product.slug}`}>Ver equipo <span aria-hidden="true">→</span></a>
@@ -173,9 +163,7 @@ const categoryLabels: Record<string, string> = {
     min-width: 0;
     min-height: 560px;
     overflow: hidden;
-    background:
-      radial-gradient(540px 400px at 50% 40%, #fff 0%, transparent 72%),
-      linear-gradient(160deg, #eaeff9, #c9d5ec);
+    background: linear-gradient(160deg, #eaeff9, #c9d5ec);
   }
 
   .bd-hero-slides,

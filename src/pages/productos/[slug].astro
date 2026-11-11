@@ -1,4 +1,5 @@
 ---
+import { getCollection, render } from 'astro:content';
 import ProductCard from '../../components/ProductCard.astro';
 import { getCategory } from '../../data/categories';
 import { products } from '../../data/products';
@@ -21,74 +22,578 @@ const category = getCategory(product.category);
 const related = products
   .filter((item) => item.category === product.category && item.slug !== product.slug)
   .slice(0, 3);
+
+// Ficha extendida opcional: src/content/productos/<slug>.md
+const entry = (await getCollection('productos')).find((item) => item.id === product.slug);
+const rendered = entry ? await render(entry) : null;
+const Content = rendered?.Content ?? null;
+const extra = entry?.data;
+const summary = extra?.summary ?? product.summary;
+const brochureUrl = extra?.brochureUrl ?? product.brochureUrl;
+const specs = extra?.specs ?? product.specs;
+const models = extra?.models ?? [];
+
+const hasDetails = Boolean(
+  Content || product.description || product.applications?.length || specs?.length || product.sections?.length,
+);
+const contactUrl = `/contacto?interes=${encodeURIComponent(product.name)}`;
+
+// Índice de la columna izquierda: títulos ## del Markdown + bloques extra.
+const toc = [
+  ...(Content ? [{ slug: 'descripcion', text: 'Descripción' }] : []),
+  ...(rendered?.headings.filter((heading) => heading.depth === 2) ?? []),
+  ...(models.length > 0 ? [{ slug: 'modelos', text: extra?.modelsTitle ?? 'Modelos disponibles' }] : []),
+  ...(extra?.youtubeId ? [{ slug: 'video', text: 'Video' }] : []),
+  ...(specs?.length ? [{ slug: 'especificaciones', text: 'Especificaciones' }] : []),
+];
 ---
 
-<MainLayout title={product.name} description={product.summary}>
-  <header class="page-hero">
+<MainLayout title={product.name} description={summary}>
+  <div class="product-page">
     <div class="wrap">
-      <nav class="crumb" aria-label="Ruta">
+      <nav class="crumb product-crumb" aria-label="Ruta">
         <a href="/">Inicio</a>
         <span aria-hidden="true">/</span>
         <a href="/productos">Productos</a>
         <span aria-hidden="true">/</span>
-        <span>{product.name}</span>
+        <span aria-current="page">{product.name}</span>
       </nav>
-      <p class="kicker">{category?.name}</p>
-      <h1>{product.name}</h1>
-      <p>Marca: {product.brand}</p>
-      <p class="lead">{product.summary}</p>
-    </div>
-  </header>
 
-  <div class="wrap detail">
-    <div class="media-placeholder detail-placeholder">Foto del producto</div>
-    <div class="detail-copy">
-      <p>{product.description || product.summary || product.name}</p>
-      {product.applications && product.applications.length > 0 && (
-        <>
-          <h2>Aplicaciones</h2>
-          <ul class="tag-list">
-            {product.applications.map((application) => <li>{application}</li>)}
-          </ul>
-        </>
-      )}
-      {product.specs && product.specs.length > 0 && (
-        <>
-          <h2>Qué se define al cotizar</h2>
-          <p>Estos puntos orientan la conversación. La marca, el modelo y los valores de trabajo se confirman en la propuesta.</p>
-          <table class="spec-table">
-            <tbody>
-              {
-                product.specs.map((spec) => (
-                  <tr>
-                    <th scope="row">{spec.label}</th>
-                    <td>{spec.value}</td>
-                  </tr>
-                ))
-              }
-            </tbody>
-          </table>
-        </>
-      )}
-      <a class="button" href={`/contacto?interes=${encodeURIComponent(product.name)}`}>Cotizar este equipo</a>
-    </div>
-  </div>
+      <section class="product-intro" aria-labelledby="product-title">
+        <div class="product-intro-media">
+          <img src={product.image} alt={product.name} width="600" height="480" />
+        </div>
+        <div class="product-intro-copy">
+          <p class="kicker">{category?.name}</p>
+          <h1 id="product-title">{product.name}</h1>
+          <p class="product-brand"><span>Marca</span> {product.brand}</p>
+          {summary && <p class="product-summary">{summary}</p>}
+          <div class="product-actions">
+            <a class="button" href={contactUrl}>Solicitar cotización <span aria-hidden="true">→</span></a>
+            {brochureUrl && (
+              <a class="product-download" href={brochureUrl} target="_blank" rel="noopener noreferrer">
+                Ver ficha técnica <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+          <p class="product-help">¿Necesita más información? Nuestro equipo le ayudará a encontrar la solución adecuada.</p>
+        </div>
+      </section>
 
-  {
-    related.length > 0 && (
-      <section class="section section-follow">
+      <section class="product-information" aria-labelledby="information-title">
+        <aside class="product-information-heading">
+          <p class="kicker">Conozca el equipo</p>
+          <h2 id="information-title">Información del producto</h2>
+          {toc.length > 1 && (
+            <nav class="product-toc" aria-label="Secciones del producto">
+              <ol>
+                {toc.map((item) => (
+                  <li><a href={`#${item.slug}`}>{item.text}</a></li>
+                ))}
+              </ol>
+            </nav>
+          )}
+          <div class="product-toc-cta">
+            <p>¿Le interesa este equipo?</p>
+            <a class="button" href={contactUrl}>Solicitar cotización <span aria-hidden="true">→</span></a>
+            {brochureUrl && (
+              <a class="product-info-link" href={brochureUrl} target="_blank" rel="noopener noreferrer">
+                Descargar ficha técnica <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+        </aside>
+        <div class="product-information-content">
+          {Content && (
+            <div class="product-info-block product-prose" id="descripcion">
+              <Content />
+            </div>
+          )}
+
+          {models.length > 0 && (
+            <div class="product-info-block" id="modelos">
+              <h3>{extra?.modelsTitle ?? 'Modelos disponibles'}</h3>
+              <div class="product-models">
+                {models.map((model) => (
+                  <article class="product-model">
+                    {model.image && <img src={model.image} alt={model.name} loading="lazy" />}
+                    <div>
+                      <h4>{model.name}</h4>
+                      <p>{model.description}</p>
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {extra?.youtubeId && (
+            <div class="product-info-block" id="video">
+              <h3>Video</h3>
+              <div class="product-video">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${extra.youtubeId}`}
+                  title={`Video: ${product.name}`}
+                  loading="lazy"
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+          )}
+
+          {product.description && (
+            <div class="product-info-block">
+              <h3>Descripción</h3>
+              <p>{product.description}</p>
+            </div>
+          )}
+
+          {product.sections?.map((section) => (
+            <div class="product-info-block">
+              <h3>{section.title}</h3>
+              {section.paragraphs?.map((paragraph) => <p>{paragraph}</p>)}
+              {section.items && section.items.length > 0 && (
+                <ul>{section.items.map((item) => <li>{item}</li>)}</ul>
+              )}
+              {section.image && (
+                <img class="product-section-image" src={section.image} alt={section.imageAlt || section.title} loading="lazy" />
+              )}
+            </div>
+          ))}
+
+          {product.applications && product.applications.length > 0 && (
+            <div class="product-info-block">
+              <h3>Aplicaciones</h3>
+              <ul>{product.applications.map((application) => <li>{application}</li>)}</ul>
+            </div>
+          )}
+
+          {specs && specs.length > 0 && (
+            <div class="product-info-block" id="especificaciones">
+              <h3>Especificaciones</h3>
+              <table class="product-specs">
+                <tbody>
+                  {specs.map((spec) => (
+                    <tr>
+                      <th scope="row">{spec.label}</th>
+                      <td>{spec.value}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {!hasDetails && (
+            <div class="product-info-block">
+              <h3>Información en preparación</h3>
+              <p>Consúltenos para conocer las características y opciones disponibles de este equipo.</p>
+              <a class="product-info-link" href={contactUrl}>Consultar sobre este equipo <span aria-hidden="true">→</span></a>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+
+    {related.length > 0 && (
+      <section class="related-products">
         <div class="wrap">
-          <div class="section-head">
-            <p class="kicker">Relacionados</p>
-            <h2>Otros equipos de {category?.name}</h2>
+          <div class="related-heading">
+            <div>
+              <p class="kicker">Siga explorando</p>
+              <h2>Equipos relacionados</h2>
+            </div>
+            <a href={`/productos?categoria=${encodeURIComponent(product.category)}`}>Ver la categoría <span aria-hidden="true">→</span></a>
           </div>
           <div class="product-grid">
-            {related.map((item) => (
-              <ProductCard product={item} />
-            ))}
+            {related.map((item) => <ProductCard product={item} />)}
           </div>
         </div>
       </section>
-    )
-  }
+    )}
+  </div>
 </MainLayout>
+
+<script>
+  // Resalta en el índice la sección visible.
+  const links = [...document.querySelectorAll<HTMLAnchorElement>('.product-toc a')];
+  const targets = links
+    .map((link) => document.getElementById(decodeURIComponent(link.hash.slice(1))))
+    .filter((el): el is HTMLElement => Boolean(el));
+
+  if (targets.length) {
+    const setActive = () => {
+      const offset = window.innerHeight * 0.3;
+      let current = targets[0];
+      for (const target of targets) {
+        if (target.getBoundingClientRect().top - offset <= 0) current = target;
+      }
+      links.forEach((link) => link.classList.toggle('is-active', link.hash.slice(1) === current.id));
+    };
+    setActive();
+    window.addEventListener('scroll', setActive, { passive: true });
+  }
+</script>
+
+<style>
+  .product-page {
+    padding-top: 28px;
+  }
+
+  .product-crumb {
+    margin-bottom: 28px;
+  }
+
+  .product-intro {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(32px, 5vw, 72px);
+    align-items: center;
+  }
+
+  .product-intro-media {
+    display: grid;
+    min-height: 420px;
+    place-items: center;
+    overflow: hidden;
+    border-radius: 16px;
+    background: linear-gradient(160deg, #eaeff9, #cfdaef);
+  }
+
+  .product-intro-media img {
+    display: block;
+    width: 100%;
+    height: 420px;
+    padding: 32px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  .product-intro-copy h1 {
+    margin: 0 0 18px;
+    font-size: clamp(2.2rem, 3.8vw, 3.6rem);
+  }
+
+  .product-brand {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .product-brand span {
+    margin-right: 8px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .product-summary {
+    margin-top: 20px;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .product-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+    margin-top: 28px;
+  }
+
+  .product-download {
+    display: inline-flex;
+    min-height: 48px;
+    align-items: center;
+    gap: 8px;
+    padding: 0.7rem 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--brand);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .product-download:hover {
+    border-color: var(--brand);
+    background: var(--surface);
+  }
+
+  .product-help {
+    max-width: 46ch;
+    margin-top: 20px;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  .product-information {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(32px, 5vw, 72px);
+    margin: 80px 0;
+    padding-top: 36px;
+    border-top: 1px solid var(--line);
+  }
+
+  .product-information-heading {
+    position: sticky;
+    top: 100px;
+    align-self: start;
+  }
+
+  .product-information-heading h2 {
+    max-width: 15ch;
+  }
+
+  .product-toc ol {
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+    border-left: 2px solid var(--line);
+  }
+
+  .product-toc a {
+    display: block;
+    margin-left: -2px;
+    padding: 8px 0 8px 16px;
+    border-left: 2px solid transparent;
+    color: var(--muted);
+    text-decoration: none;
+  }
+
+  .product-toc a:hover,
+  .product-toc a.is-active {
+    border-left-color: var(--brand);
+    color: var(--brand);
+  }
+
+  .product-toc-cta {
+    margin-top: 28px;
+    padding: 20px;
+    border-radius: 12px;
+    background: var(--tint);
+  }
+
+  .product-toc-cta p {
+    margin: 0 0 12px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .product-information-content :global([id]) {
+    scroll-margin-top: 100px;
+  }
+
+  .product-info-block + .product-info-block {
+    margin-top: 36px;
+    padding-top: 36px;
+    border-top: 1px solid var(--line);
+  }
+
+  .product-info-block h3 {
+    margin-bottom: 14px;
+    font-size: 1.4rem;
+  }
+
+  .product-info-block p,
+  .product-info-block li {
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .product-info-block p + p {
+    margin-top: 14px;
+  }
+
+  .product-info-block ul {
+    padding-left: 1.2rem;
+  }
+
+  /* Markdown de src/content/productos (los estilos deben ser :global) */
+  .product-prose :global(h2) {
+    margin: 40px 0 14px;
+    padding-top: 36px;
+    border-top: 1px solid var(--line);
+    font-size: 1.4rem;
+  }
+
+  .product-prose :global(h2:first-child) {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+  }
+
+  .product-prose :global(p),
+  .product-prose :global(li) {
+    color: var(--muted);
+    line-height: 1.75;
+  }
+
+  .product-prose :global(p + p),
+  .product-prose :global(ul + p),
+  .product-prose :global(p + ul) {
+    margin-top: 14px;
+  }
+
+  .product-prose :global(strong) {
+    color: var(--ink);
+  }
+
+  .product-prose :global(ul) {
+    padding-left: 1.2rem;
+  }
+
+  .product-prose :global(li + li) {
+    margin-top: 6px;
+  }
+
+  .product-prose :global(img) {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    max-height: 420px;
+    margin: 24px 0;
+    object-fit: contain;
+  }
+
+  .product-models {
+    display: grid;
+    gap: 20px;
+  }
+
+  .product-model {
+    display: grid;
+    grid-template-columns: 140px minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
+    padding: 20px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+  }
+
+  .product-model img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    mix-blend-mode: multiply;
+  }
+
+  .product-model h4 {
+    margin: 0 0 8px;
+    font-size: 1.05rem;
+  }
+
+  .product-model p {
+    margin: 0;
+    font-size: 0.95rem;
+  }
+
+  .product-video {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 12px;
+    background: var(--surface);
+  }
+
+  .product-video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+
+  .product-section-image {
+    display: block;
+    max-height: 420px;
+    margin-top: 24px;
+    object-fit: contain;
+  }
+
+  .product-info-link,
+  .related-heading > a {
+    display: inline-block;
+    margin-top: 16px;
+    color: var(--brand);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .product-info-link:hover,
+  .related-heading > a:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  .product-specs {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+  }
+
+  .product-specs th,
+  .product-specs td {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--line);
+    vertical-align: top;
+  }
+
+  .product-specs th {
+    width: 40%;
+    padding-right: 20px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+
+  .related-products {
+    padding: 64px 0 80px;
+    background: var(--tint);
+  }
+
+  .related-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+
+  @media (max-width: 768px) {
+    .product-intro,
+    .product-information {
+      grid-template-columns: 1fr;
+    }
+
+    .product-intro-media,
+    .product-intro-media img {
+      min-height: 0;
+      height: 320px;
+    }
+
+    .product-information {
+      margin: 56px 0;
+    }
+
+    .product-information-heading {
+      position: static;
+    }
+
+    .product-toc-cta {
+      display: none;
+    }
+
+    .product-model {
+      grid-template-columns: 1fr;
+    }
+
+    .product-model img {
+      width: 100%;
+      height: 180px;
+    }
+
+    .related-products {
+      padding: 48px 0 56px;
+    }
+  }
+</style>

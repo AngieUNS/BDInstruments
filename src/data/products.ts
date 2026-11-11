@@ -9,6 +9,14 @@ export interface ProductSpec {
   value: string;
 }
 
+export interface ProductSection {
+  title: string;
+  paragraphs?: string[];
+  items?: string[];
+  image?: string;
+  imageAlt?: string;
+}
+
 export interface ProductCardItem {
   slug: string;
   name: string;
@@ -19,7 +27,9 @@ export interface ProductCardItem {
   description?: string;
   applications?: string[];
   specs?: ProductSpec[];
-  /** Enlace temporal a la web antigua. Quitar cuando existan las páginas de detalle en Astro. */
+  sections?: ProductSection[];
+  brochureUrl?: string;
+  /** Referencia a la página anterior para facilitar la migración del contenido. */
   href?: string;
 }
 

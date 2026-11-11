@@ -10,8 +10,7 @@ interface Props {
 
 const { product, hidden = false } = Astro.props;
 const category = getCategory(product.category);
-const href = product.href === undefined ? `/productos/${product.slug}` : product.href;
-const CardLink = href ? 'a' : 'div';
+const href = `/productos/${product.slug}`;
 ---
 
 <article
@@ -20,7 +19,7 @@ const CardLink = href ? 'a' : 'div';
     data-category={product.category}
     hidden={hidden}
 >
-  <CardLink class="product-card-link" href={href || undefined}>
+  <a class="product-card-link" href={href}>
     <div class="product-card-media">
       <img
           src={product.image}
@@ -43,11 +42,9 @@ const CardLink = href ? 'a' : 'div';
 
       {product.summary && <p class="product-card-summary">{product.summary}</p>}
 
-      {href && (
-        <span class="product-card-cta">Consultar equipo <span aria-hidden="true">→</span></span>
-      )}
+      <span class="product-card-cta">Consultar equipo <span aria-hidden="true">→</span></span>
     </div>
-  </CardLink>
+  </a>
 </article>
 
 <style>

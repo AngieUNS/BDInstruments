@@ -19,7 +19,8 @@
   --copper-soft: var(--tint);
   --shadow: 0 6px 20px rgba(12, 27, 51, 0.08);
   --sans: 'Public Sans', 'Segoe UI', sans-serif;
-  --serif: 'Bricolage Grotesque', 'Public Sans', sans-serif;
+  /* Fuente de títulos (el nombre "serif" es histórico; es Manrope, sin serifa). */
+  --serif: 'Manrope', 'Public Sans', sans-serif;
   --header: 68px;
   --wrap: 1120px;
   color-scheme: light;

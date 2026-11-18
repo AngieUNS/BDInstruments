@@ -1,4 +1,6 @@
 ---
+import { site, whatsappHref } from '../data/site';
+
 const path = Astro.url.pathname;
 
 const links = [
@@ -15,86 +17,109 @@ function isCurrent(href: string) {
 
   if (href === '/') return currentPath === '/';
 
-  return (
-      currentPath === href ||
-      currentPath.startsWith(`${href}/`)
-  );
+  return currentPath === href || currentPath.startsWith(`${href}/`);
 }
 ---
 
 <header class="header" data-header>
   <div class="header-container">
-    <!-- LOGO -->
     <a class="logo" href="/" aria-label="BD Instruments - Inicio">
       <img
-          class="logo-img"
-          src="https://bdinstruments.com/wp-content/uploads/2024/08/BD-instruments-logotipo-1.png"
-          alt="BD Instruments - Precisión que transforma"
-          height="48"
+        class="logo-img"
+        src="https://bdinstruments.com/wp-content/uploads/2024/08/BD-instruments-logotipo-1.png"
+        alt="BD Instruments"
+        height="48"
       />
     </a>
 
-    <!-- NAVEGACIÓN DESKTOP -->
     <nav class="nav" id="navegacion" data-nav aria-label="Navegación principal">
       <div class="nav-links">
         {
           links.map((link) => (
-              <a
-                  href={link.href}
-                  class:list={[
-                    'nav-link',
-                    { 'is-active': isCurrent(link.href) },
-                  ]}
-                  aria-current={isCurrent(link.href) ? 'page' : undefined}
-              >
-                {link.label}
-              </a>
+            <a
+              href={link.href}
+              class:list={['nav-link', { 'is-active': isCurrent(link.href) }]}
+              aria-current={isCurrent(link.href) ? 'page' : undefined}
+            >
+              <span>{link.label}</span>
+              <svg class="nav-chevron" viewBox="0 0 24 24" aria-hidden="true">
+                <path d="m9 6 6 6-6 6" />
+              </svg>
+            </a>
           ))
         }
       </div>
 
+      <!-- Solo visible en el menú móvil -->
+      <div class="nav-extra">
+        <a class="nav-cta" href="/contacto">
+          Solicitar cotización
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+        </a>
+
+        <div class="nav-contact">
+          <a href={whatsappHref()} target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.4L3 20.5l1.6-5.4A8.4 8.4 0 1 1 21 11.5Z" />
+            </svg>
+            <span><small>WhatsApp</small>{site.whatsappDisplay}</span>
+          </a>
+          <a href={`tel:${site.phoneTel}`}>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2Z" />
+            </svg>
+            <span><small>Teléfono</small>{site.phoneDisplay}</span>
+          </a>
+        </div>
+
+        <p class="nav-hours">{site.hours}</p>
+      </div>
     </nav>
 
-    <!-- BOTÓN MÓVIL -->
     <button
-        class="nav-toggle"
-        type="button"
-        aria-label="Abrir menú"
-        aria-expanded="false"
-        aria-controls="navegacion"
-        data-nav-toggle
+      class="nav-toggle"
+      type="button"
+      aria-label="Abrir menú"
+      aria-expanded="false"
+      aria-controls="navegacion"
+      data-nav-toggle
     >
-      <span class="hamburger">
+      <span class="hamburger" aria-hidden="true">
+        <span></span>
         <span></span>
         <span></span>
       </span>
     </button>
   </div>
+
+  <div class="nav-backdrop" data-nav-backdrop aria-hidden="true"></div>
 </header>
-
-
 
 <style>
   .header {
-    --header-navy: var(--brand);
-    --header-accent: var(--brand-2);
-    --header-muted: var(--muted);
-    --header-border: var(--line);
+    --header-h: 84px;
 
     position: sticky;
     top: 0;
     z-index: 100;
     width: 100%;
     background: rgb(255 255 255 / 96%);
-    border-bottom: 1px solid var(--header-border);
+    border-bottom: 1px solid var(--line);
     transition:
-        box-shadow 0.25s ease,
-        background-color 0.25s ease;
+      box-shadow 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .header.is-scrolled {
+    box-shadow: 0 5px 22px rgb(12 27 51 / 8%);
+    background: rgb(255 255 255 / 98%);
   }
 
   .header-container {
+    position: relative;
+    z-index: 2;
     width: min(100% - 64px, 1280px);
-    min-height: 84px;
+    min-height: var(--header-h);
     margin-inline: auto;
     display: flex;
     align-items: center;
@@ -104,71 +129,29 @@ function isCurrent(href: string) {
 
   /* LOGO */
 
-  .header .logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 11px;
-    flex-shrink: 0;
-    color: var(--header-navy);
-    text-decoration: none;
-  }
-
-  .logo-mark {
-    font-family: "Manrope", sans-serif;
-    font-size: 39px;
-    font-weight: 800;
-    line-height: 1;
-    letter-spacing: -4px;
-  }
-
-  .logo-dot {
-    color: var(--header-accent);
-  }
-
-  .logo-copy {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .logo-name {
-    font-family: "Manrope", sans-serif;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.12em;
-    line-height: 1;
-  }
-
-  .logo-tagline {
-    color: var(--header-muted);
-    font-size: 8px;
-    font-weight: 700;
-    letter-spacing: 0.105em;
-    white-space: nowrap;
-  }
   .logo {
     display: inline-flex;
     align-items: center;
+    flex-shrink: 1;
+    min-width: 0;
+    color: var(--brand);
+    font-family: var(--serif);
+    font-weight: 800;
+    text-decoration: none;
   }
 
   .logo-img {
     display: block;
-    height: 48px;      /* ajusta según la altura de tu header */
-    width: auto;       /* mantiene la proporción */
+    height: 48px;
+    width: auto;
     max-width: 100%;
   }
 
-  @media (max-width: 768px) {
-    .logo-img {
-      height: 40px;
-    }
-  }
-  /* NAVEGACIÓN */
+  /* NAVEGACIÓN ESCRITORIO */
 
-  .header .nav {
+  .nav {
     display: flex;
     align-items: center;
-    gap: 30px;
     margin-left: auto;
   }
 
@@ -178,18 +161,20 @@ function isCurrent(href: string) {
     gap: 5px;
   }
 
-  .header .nav-link {
+  .nav-link {
     position: relative;
     display: inline-flex;
     align-items: center;
     min-height: 44px;
     padding: 0 11px;
-    color: var(--header-muted);
-    font-size: 13px;
+    color: var(--muted);
+    font-size: 14px;
     font-weight: 600;
     text-decoration: none;
     white-space: nowrap;
-    transition: color 0.2s ease;
+    transition:
+      color 0.2s ease,
+      background-color 0.2s ease;
   }
 
   .nav-link::after {
@@ -199,16 +184,16 @@ function isCurrent(href: string) {
     left: 11px;
     height: 2px;
     border-radius: 2px;
-    background: var(--header-accent);
-    content: "";
+    background: var(--brand-2);
+    content: '';
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.22s ease;
   }
 
-  .header .nav-link:hover,
-  .header .nav-link.is-active {
-    color: var(--header-navy);
+  .nav-link:hover,
+  .nav-link.is-active {
+    color: var(--brand);
   }
 
   .nav-link:hover::after,
@@ -216,106 +201,73 @@ function isCurrent(href: string) {
     transform: scaleX(1);
   }
 
-  /* BOTÓN DE COTIZACIÓN */
-
-  .header .quote-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 13px;
-    min-height: 46px;
-    padding: 0 17px;
-    border: 1px solid var(--brand);
-    border-radius: 8px;
-    background: var(--brand);
-    color: #fff;
-    font-size: 12px;
-    font-weight: 700;
-    text-decoration: none;
-    white-space: nowrap;
-    transition:
-        background-color 0.2s ease,
-        border-color 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
-  }
-
-  .header .quote-button:hover {
-    background: #08347f;
-    border-color: #08347f;
-    color: #fff;
-    box-shadow: 0 5px 14px rgb(12 27 51 / 16%);
-    transform: translateY(-1px);
-  }
-
-  .quote-icon {
-    color: #c5d6f5;
-    transition: transform 0.2s ease;
-  }
-
-  .quote-button:hover .quote-icon {
-    transform: translate(2px, -2px);
+  .nav-chevron,
+  .nav-extra,
+  .nav-backdrop {
+    display: none;
   }
 
   /* BOTÓN HAMBURGUESA */
 
-  .header .nav-toggle {
+  .nav-toggle {
     display: none;
+    flex-shrink: 0;
     width: 44px;
     height: 44px;
     padding: 0;
     align-items: center;
     justify-content: center;
-    border: 1px solid var(--header-border);
-    border-radius: 8px;
+    border: 1px solid var(--line);
+    border-radius: 10px;
     background: var(--surface);
-    color: var(--header-navy);
+    color: var(--brand);
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .nav-toggle:active {
+    background: var(--tint);
   }
 
   .hamburger {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 6px;
+    position: relative;
+    display: block;
     width: 20px;
+    height: 14px;
   }
 
   .hamburger span {
-    display: block;
-    width: 20px;
+    position: absolute;
+    left: 0;
+    width: 100%;
     height: 2px;
     border-radius: 2px;
     background: currentColor;
     transition:
-        transform 0.2s ease,
-        width 0.2s ease;
+      transform 0.25s ease,
+      opacity 0.2s ease,
+      top 0.25s ease;
   }
 
-  .hamburger span:last-child {
-    width: 14px;
-    margin-left: auto;
+  .hamburger span:nth-child(1) { top: 0; }
+  .hamburger span:nth-child(2) { top: 6px; }
+  .hamburger span:nth-child(3) { top: 12px; }
+
+  .nav-toggle[aria-expanded='true'] .hamburger span:nth-child(1) {
+    top: 6px;
+    transform: rotate(45deg);
   }
 
-  .nav-toggle[aria-expanded="true"]
-  .hamburger span:first-child {
-    transform: translateY(4px) rotate(45deg);
+  .nav-toggle[aria-expanded='true'] .hamburger span:nth-child(2) {
+    opacity: 0;
   }
 
-  .nav-toggle[aria-expanded="true"]
-  .hamburger span:last-child {
-    width: 20px;
-    transform: translateY(-4px) rotate(-45deg);
+  .nav-toggle[aria-expanded='true'] .hamburger span:nth-child(3) {
+    top: 6px;
+    transform: rotate(-45deg);
   }
 
-  /* EFECTO AL DESPLAZARSE */
-
-  .header.is-scrolled {
-    box-shadow: 0 5px 22px rgb(12 27 51 / 8%);
-    background: rgb(255 255 255 / 98%);
-  }
-
-  /* TABLETS Y MÓVILES */
+  /* LAPTOPS PEQUEÑAS */
 
   @media (max-width: 1080px) {
     .header-container {
@@ -323,213 +275,329 @@ function isCurrent(href: string) {
       gap: 20px;
     }
 
-    .header .nav {
-      gap: 15px;
-    }
-
-    .header .nav-link {
+    .nav-link {
       padding-inline: 8px;
-      font-size: 12px;
+      font-size: 13px;
     }
 
     .nav-link::after {
       right: 8px;
       left: 8px;
     }
-
-    .header .quote-button {
-      gap: 8px;
-      padding-inline: 12px;
-      font-size: 11px;
-    }
   }
 
-  @media (max-width: 850px) {
+  /* TABLETS Y CELULARES: MENÚ DESPLEGABLE */
+
+  @media (max-width: 900px) {
+    .header {
+      --header-h: 68px;
+    }
+
     .header-container {
-      min-height: 74px;
+      gap: 12px;
     }
 
-    .header .nav-toggle {
+    .logo-img {
+      height: 40px;
+    }
+
+    .nav-toggle {
       display: inline-flex;
-      position: relative;
-      z-index: 2;
     }
 
-    .header .nav {
-      position: absolute;
-      top: calc(100% + 1px);
+    .nav {
+      position: fixed;
+      z-index: 1;
+      top: var(--header-h);
       right: 0;
       left: 0;
       display: flex;
       flex-direction: column;
       align-items: stretch;
-      gap: 17px;
-      margin-left: 0;
-      padding: 18px 24px 24px;
+      gap: 20px;
+      max-height: calc(100dvh - var(--header-h));
+      margin: 0;
+      padding: 12px 20px calc(24px + env(safe-area-inset-bottom));
+      overflow-y: auto;
+      overscroll-behavior: contain;
       background: var(--surface);
-      border-bottom: 1px solid var(--header-border);
-      box-shadow: var(--shadow);
+      border-top: 1px solid var(--line);
+      border-radius: 0 0 18px 18px;
+      box-shadow: 0 18px 40px rgb(12 27 51 / 18%);
       opacity: 0;
       visibility: hidden;
-      pointer-events: none;
-      transform: translateY(-8px);
+      transform: translateY(-12px);
       transition:
-          opacity 0.2s ease,
-          transform 0.2s ease,
-          visibility 0.2s ease;
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        visibility 0s linear 0.22s;
     }
 
     .header.is-open .nav {
       opacity: 1;
       visibility: visible;
-      pointer-events: auto;
       transform: translateY(0);
+      transition:
+        opacity 0.22s ease,
+        transform 0.22s ease,
+        visibility 0s;
     }
 
     .nav-links {
-      display: flex;
       flex-direction: column;
       align-items: stretch;
-      gap: 0;
+      gap: 2px;
     }
 
-    .header .nav-link {
-      min-height: 48px;
-      padding: 0 5px;
-      border-bottom: 1px solid var(--line);
-      font-size: 14px;
+    .nav-link {
+      justify-content: space-between;
+      min-height: 52px;
+      padding: 0 14px;
+      border-radius: 10px;
+      color: var(--ink);
+      font-family: var(--serif);
+      font-size: 17px;
+      font-weight: 700;
     }
 
     .nav-link::after {
-      right: auto;
-      bottom: -1px;
-      left: 0;
-      width: 35px;
+      display: none;
     }
 
-    .header .quote-button {
-      width: 100%;
-      min-height: 48px;
-      justify-content: space-between;
-      padding-inline: 16px;
+    .nav-link:hover {
+      background: var(--bg);
+    }
+
+    .nav-link.is-active {
+      background: var(--tint);
+      color: var(--brand);
+    }
+
+    .nav-chevron {
+      display: block;
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      opacity: 0.45;
+    }
+
+    .nav-link.is-active .nav-chevron {
+      opacity: 1;
+    }
+
+    /* Bloque inferior: CTA y contacto */
+
+    .nav-extra {
+      display: grid;
+      gap: 12px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
+
+    .nav-cta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      border-radius: 10px;
+      background: var(--brand);
+      color: #fff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .nav-cta svg,
+    .nav-contact svg {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .nav-contact {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .nav-contact a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 56px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.25;
+      text-decoration: none;
+    }
+
+    .nav-contact a:first-child svg {
+      color: #128c4a;
+    }
+
+    .nav-contact a:last-child svg {
+      color: var(--brand);
+    }
+
+    .nav-contact small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .nav-hours {
+      color: var(--muted);
       font-size: 13px;
+      text-align: center;
+    }
+
+    /* Fondo oscuro detrás del menú */
+
+    .nav-backdrop {
+      position: fixed;
+      inset: var(--header-h) 0 0;
+      z-index: 0;
+      display: block;
+      background: rgb(12 27 51 / 45%);
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 0.22s ease,
+        visibility 0s linear 0.22s;
+    }
+
+    .header.is-open .nav-backdrop {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.22s ease;
+    }
+
+    .header.is-open {
+      background: var(--surface);
     }
   }
 
   @media (max-width: 420px) {
     .header-container {
-      width: calc(100% - 30px);
-      min-height: 70px;
-      gap: 12px;
+      width: calc(100% - 32px);
     }
 
-    .logo-mark {
-      font-size: 35px;
+    .logo-img {
+      height: 36px;
     }
 
-    .logo-name {
-      font-size: 12px;
+    .nav {
+      padding-inline: 16px;
     }
 
-    .logo-tagline {
-      font-size: 7px;
-      letter-spacing: 0.07em;
+    .nav-contact {
+      grid-template-columns: 1fr;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
     .header,
-    .header .nav,
+    .nav,
     .nav-link,
     .nav-link::after,
-    .quote-button,
-    .quote-icon,
+    .nav-backdrop,
     .hamburger span {
-      transition: none;
+      transition: none !important;
     }
   }
 </style>
 
-
 <script>
   const header = document.querySelector<HTMLElement>('[data-header]');
-  const toggle = header?.querySelector<HTMLButtonElement>(
-      '[data-nav-toggle]'
-  );
+  const toggle = header?.querySelector<HTMLButtonElement>('[data-nav-toggle]');
   const nav = header?.querySelector<HTMLElement>('[data-nav]');
+  const backdrop = header?.querySelector<HTMLElement>('[data-nav-backdrop]');
 
   if (header && toggle && nav) {
-    const mobileQuery = window.matchMedia('(max-width: 850px)');
+    const mobileQuery = window.matchMedia('(max-width: 900px)');
 
-    function setOpen(open: boolean) {
-      header?.classList.toggle('is-open', open);
-
-      toggle?.setAttribute('aria-expanded', String(open));
-      toggle?.setAttribute(
-          'aria-label',
-          open ? 'Cerrar menú' : 'Abrir menú'
-      );
+    function isOpen() {
+      return toggle!.getAttribute('aria-expanded') === 'true';
     }
 
-    toggle.addEventListener('click', () => {
-      const isOpen = toggle.getAttribute('aria-expanded') === 'true';
-      setOpen(!isOpen);
-    });
+    function setOpen(open: boolean) {
+      header!.classList.toggle('is-open', open);
+      document.body.classList.toggle('nav-open', open);
+      toggle!.setAttribute('aria-expanded', String(open));
+      toggle!.setAttribute('aria-label', open ? 'Cerrar menú' : 'Abrir menú');
+
+      if (open) {
+        nav!.scrollTop = 0;
+        nav!.querySelector<HTMLElement>('a')?.focus({ preventScroll: true });
+      }
+    }
+
+    toggle.addEventListener('click', () => setOpen(!isOpen()));
+    backdrop?.addEventListener('click', () => setOpen(false));
 
     nav.addEventListener('click', (event) => {
-      const target = event.target;
-
-      if (
-          target instanceof Element &&
-          target.closest('a')
-      ) {
+      if (event.target instanceof Element && event.target.closest('a')) {
         setOpen(false);
       }
     });
 
     document.addEventListener('keydown', (event) => {
+      if (!isOpen()) return;
+
       if (event.key === 'Escape') {
         setOpen(false);
         toggle.focus();
+        return;
+      }
+
+      // Mantiene el foco dentro del menú abierto (botón + enlaces).
+      if (event.key === 'Tab') {
+        const focusables = [
+          toggle,
+          ...nav.querySelectorAll<HTMLElement>('a[href]'),
+        ];
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
       }
     });
 
-    document.addEventListener('click', (event) => {
-      const target = event.target;
-
-      if (
-          target instanceof Node &&
-          !header.contains(target)
-      ) {
-        setOpen(false);
-      }
-    });
-
-    mobileQuery.addEventListener('change', () => {
-      setOpen(false);
-    });
+    mobileQuery.addEventListener('change', () => setOpen(false));
 
     let ticking = false;
 
     function updateScrollState() {
-      if (!ticking) {
-        window.requestAnimationFrame(() => {
-          header?.classList.toggle(
-              'is-scrolled',
-              window.scrollY > 12
-          );
+      if (ticking) return;
+      ticking = true;
 
-          ticking = false;
-        });
-
-        ticking = true;
-      }
+      window.requestAnimationFrame(() => {
+        header!.classList.toggle('is-scrolled', window.scrollY > 12);
+        ticking = false;
+      });
     }
 
     updateScrollState();
-
-    window.addEventListener('scroll', updateScrollState, {
-      passive: true,
-    });
+    window.addEventListener('scroll', updateScrollState, { passive: true });
   }
 </script>

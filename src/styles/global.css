@@ -53,6 +53,12 @@ body.nav-open {
   overflow: hidden;
 }
 
+/* Con el menú móvil abierto, el botón flotante de WhatsApp estorba. */
+body.nav-open .whatsapp {
+  opacity: 0;
+  pointer-events: none;
+}
+
 img {
   max-width: 100%;
   height: auto;
@@ -213,109 +219,6 @@ textarea {
   background: #fff;
   color: #0a3fa0;
   border-color: #fff;
-}
-
-.header {
-  position: sticky;
-  top: 0;
-  z-index: 30;
-  height: var(--header);
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-}
-
-.header-inner {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.brand {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-}
-
-.logo {
-  font-family: var(--serif);
-  font-weight: 800;
-  font-size: 1.5rem;
-  color: var(--brand);
-  text-decoration: none;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.logo small {
-  display: block;
-  margin-top: -2px;
-  font-family: var(--sans);
-  font-weight: 500;
-  font-size: 0.68rem;
-  letter-spacing: 0.2em;
-  color: var(--muted);
-}
-
-.nav {
-  display: flex;
-  align-items: center;
-  gap: 1.35rem;
-  margin-left: auto;
-}
-
-.nav a {
-  text-decoration: none;
-  padding: 0.35rem 0;
-  border-radius: 0;
-  color: var(--muted);
-  font-size: 0.95rem;
-  font-weight: 500;
-}
-
-.nav a:hover,
-.nav a[aria-current='page'] {
-  background: transparent;
-  color: var(--brand);
-}
-
-.nav-toggle {
-  display: none;
-  width: 46px;
-  height: 46px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: var(--paper-2);
-  padding: 0;
-  cursor: pointer;
-}
-
-.nav-toggle span,
-.nav-toggle span::before,
-.nav-toggle span::after {
-  display: block;
-  width: 18px;
-  height: 2px;
-  margin-inline: auto;
-  background: var(--deep);
-  position: relative;
-  border-radius: 2px;
-}
-
-.nav-toggle span::before,
-.nav-toggle span::after {
-  content: '';
-  position: absolute;
-  left: 0;
-}
-
-.nav-toggle span::before {
-  top: -6px;
-}
-
-.nav-toggle span::after {
-  top: 6px;
 }
 
 .hero {
@@ -1089,39 +992,6 @@ textarea {
 
   .trust-item + .trust-item {
     border-left: 1px solid var(--line);
-  }
-}
-
-@media (max-width: 1080px) {
-  .nav-toggle {
-    display: inline-grid;
-    place-items: center;
-  }
-
-  .nav {
-    position: fixed;
-    z-index: 40;
-    top: calc(var(--header) + 0.6rem);
-    left: 1rem;
-    right: 1rem;
-    display: grid;
-    gap: 0.25rem;
-    padding: 0.7rem;
-    background: var(--paper-2);
-    border: 1px solid var(--line);
-    border-radius: 20px;
-    box-shadow: var(--shadow);
-    visibility: hidden;
-    opacity: 0;
-  }
-
-  .header.is-open .nav {
-    visibility: visible;
-    opacity: 1;
-  }
-
-  .nav .button {
-    margin-top: 0.3rem;
   }
 }
 

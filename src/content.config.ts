@@ -28,7 +28,7 @@ const productos = defineCollection({
         z.object({
           name: z.string(),
           image: z.string().optional(),
-          description: z.string(),
+          description: z.string().optional(),
         }),
       )
       .optional(),

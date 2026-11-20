@@ -1,0 +1,83 @@
+---
+# Importado de https://bdinstruments.com/autoclave/ — BORRADOR: revisar redacción
+---
+
+## ESTERILIZADORES A VAPOR DE BANCO
+
+- NC 23B / NC 32S
+
+NÜVE tiene una enorme experiencia en la fabricación de esterilizadores de vapor. Esta actual gama de productos ha sido cuidadosamente diseñada para cubrir todas las aplicaciones en consultas médicas generales, odontología, instalaciones de higiene personal, cuidados de belleza, consultas veterinarias y uso de reserva en hospitales y clínicas.Los instrumentos cumplen con los requisitos de la norma EN 13060 para esterilización de clase B y S con ventajas técnicas adicionales. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario.
+
+NÜVE tiene una enorme experiencia en la fabricación de esterilizadores de vapor. Esta actual gama de productos ha sido cuidadosamente diseñada para cubrir todas las aplicaciones en consultas médicas generales, odontología, instalaciones de higiene personal, cuidados de belleza, consultas veterinarias y uso de reserva en hospitales y clínicas.Los instrumentos cumplen con los requisitos de la norma EN 13060 para esterilización de clase B y S con ventajas técnicas adicionales. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario.
+
+NÜVE tiene una enorme experiencia en la fabricación de esterilizadores de vapor. Esta actual gama de productos ha sido cuidadosamente diseñada para cubrir todas las aplicaciones en consultas médicas generales, odontología, instalaciones de higiene personal, cuidados de belleza, consultas veterinarias y uso de reserva en hospitales y clínicas.Los instrumentos cumplen con los requisitos de la norma EN 13060 para esterilización de clase B y S con ventajas técnicas adicionales. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario.
+
+NÜVE tiene una enorme experiencia en la fabricación de esterilizadores de vapor. Esta actual gama de productos ha sido cuidadosamente diseñada para cubrir todas las aplicaciones en consultas médicas generales, odontología, instalaciones de higiene personal, cuidados de belleza, consultas veterinarias y uso de reserva en hospitales y clínicas.
+
+Los instrumentos cumplen con los requisitos de la norma EN 13060 para esterilización de clase B y S con ventajas técnicas adicionales. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario.
+
+![NC 23B/NC 32S ESTERILIZADORES A VAPOR DE BANCO](https://bdinstruments.com/wp-content/uploads/2024/05/2.1.png)
+
+## ESTERILIZADORES A VAPOR VERTICALES DE LABORATORIO
+
+- NC 40M / 90M
+
+Especialmente desarrollados para la esterilización por vapor de líquidos y medios de cultivo, NC 40M y NC 90M ofrecen una sonda de temperatura flexible que se puede colocar en un recipiente de líquido para garantizar que el tiempo de esterilización requerido solo comience cuando los propios fluidos estén a la temperatura indicada en el protocolo. .El enfriamiento mediante ventilación de aire forzado sobre la cámara reduce el tiempo de enfriamiento. Un sistema de escape fraccionado protege productos frágiles como la cristalería contra roturas. El diseño cuidadoso proporciona una capacidad de matraz mayor que la mayoría de los esterilizadores de vapor de volumen similar para los matraces más populares.
+
+Especialmente desarrollados para la esterilización por vapor de líquidos y medios de cultivo, NC 40M y NC 90M ofrecen una sonda de temperatura flexible que se puede colocar en un recipiente de líquido para garantizar que el tiempo de esterilización requerido solo comience cuando los propios fluidos estén a la temperatura indicada en el protocolo. .El enfriamiento mediante ventilación de aire forzado sobre la cámara reduce el tiempo de enfriamiento. Un sistema de escape fraccionado protege productos frágiles como la cristalería contra roturas. El diseño cuidadoso proporciona una capacidad de matraz mayor que la mayoría de los esterilizadores de vapor de volumen similar para los matraces más populares.
+
+Especialmente desarrollados para la esterilización por vapor de líquidos y medios de cultivo, NC 40M y NC 90M ofrecen una sonda de temperatura flexible que se puede colocar en un recipiente de líquido para garantizar que el tiempo de esterilización requerido solo comience cuando los propios fluidos estén a la temperatura indicada en el protocolo. .El enfriamiento mediante ventilación de aire forzado sobre la cámara reduce el tiempo de enfriamiento. Un sistema de escape fraccionado protege productos frágiles como la cristalería contra roturas. El diseño cuidadoso proporciona una capacidad de matraz mayor que la mayoría de los esterilizadores de vapor de volumen similar para los matraces más populares.
+
+Especialmente desarrollados para la esterilización por vapor de líquidos y medios de cultivo, NC 40M y NC 90M ofrecen una sonda de temperatura flexible que se puede colocar en un recipiente de líquido para garantizar que el tiempo de esterilización requerido solo comience cuando los propios fluidos estén a la temperatura indicada en el protocolo. .
+
+El enfriamiento mediante ventilación de aire forzado sobre la cámara reduce el tiempo de enfriamiento. Un sistema de escape fraccionado protege productos frágiles como la cristalería contra roturas. El diseño cuidadoso proporciona una capacidad de matraz mayor que la mayoría de los esterilizadores de vapor de volumen similar para los matraces más populares.
+
+![ESTERILIZADORES A VAPOR VERTICALES DE LABORATORIO](https://bdinstruments.com/wp-content/uploads/2024/05/2.2.png)
+
+## ESTERILIZADOR A VAPOR VERTICAL
+
+- NC 100
+
+El esterilizador a vapor de alta resistencia NC 100 cuenta con tecnología avanzada para la esterilización de textiles, materiales envueltos o empacados y vidrio. Los operadores quedan liberados gracias a su funcionamiento automático, su bomba de vacío sin mantenimiento y su recuperación instantánea de 5 programas preestablecidos o 10 definidos por el usuario. La seguridad del producto está garantizada por el control de vacío previo a la esterilización para eliminar burbujas y el control de vacío fraccionado posterior a la esterilización para el secado de muestras.Con su pantalla colorida de 4,3», el sistema de control N -Smart™ incluye un programa preestablecido para facilitar su uso. Los programas operados se pueden transferir a una tarjeta de memoria a través del puerto USB para su trazabilidad.
+
+![ESTERILIZADOR A VAPOR VERTICAL](https://bdinstruments.com/wp-content/uploads/2024/05/2.3.png)
+
+## ESTERILIZADORES DE VAPOR HORIZONTALES
+
+- NC 150 / 150D
+
+El esterilizador a vapor NC 150/150D es ideal para centros de esterilización de tamaño mediano para la esterilización de instrumentos quirúrgicos y dentales empaquetados o desempaquetados, ropa de operación, vidrio, plástico, caucho y materiales de silicona. 7 programas preestablecidos y 12 programas personalizados facilitan la esterilización para los usuarios.Si bien la calidad de la esterilización coincide con las necesidades de la norma europea EN 285 para esterilizadores de vapor grandes, los instrumentos cumplen con las directivas sobre dispositivos médicos y equipos a presión. La versión de doble puerta NC 150D es ideal para los centros de esterilización que tienen áreas limpias y estériles separadas.
+
+El esterilizador a vapor NC 150/150D es ideal para centros de esterilización de tamaño mediano para la esterilización de instrumentos quirúrgicos y dentales empaquetados o desempaquetados, ropa de operación, vidrio, plástico, caucho y materiales de silicona. 7 programas preestablecidos y 12 programas personalizados facilitan la esterilización para los usuarios.Si bien la calidad de la esterilización coincide con las necesidades de la norma europea EN 285 para esterilizadores de vapor grandes, los instrumentos cumplen con las directivas sobre dispositivos médicos y equipos a presión. La versión de doble puerta NC 150D es ideal para los centros de esterilización que tienen áreas limpias y estériles separadas.
+
+El esterilizador a vapor NC 150/150D es ideal para centros de esterilización de tamaño mediano para la esterilización de instrumentos quirúrgicos y dentales empaquetados o desempaquetados, ropa de operación, vidrio, plástico, caucho y materiales de silicona. 7 programas preestablecidos y 12 programas personalizados facilitan la esterilización para los usuarios.Si bien la calidad de la esterilización coincide con las necesidades de la norma europea EN 285 para esterilizadores de vapor grandes, los instrumentos cumplen con las directivas sobre dispositivos médicos y equipos a presión. La versión de doble puerta NC 150D es ideal para los centros de esterilización que tienen áreas limpias y estériles separadas.
+
+El esterilizador a vapor NC 150/150D es ideal para centros de esterilización de tamaño mediano para la esterilización de instrumentos quirúrgicos y dentales empaquetados o desempaquetados, ropa de operación, vidrio, plástico, caucho y materiales de silicona. 7 programas preestablecidos y 12 programas personalizados facilitan la esterilización para los usuarios.Si bien la calidad de la esterilización coincide con las necesidades de la norma europea EN 285 para esterilizadores de vapor grandes, los instrumentos cumplen con las directivas sobre dispositivos médicos y equipos a presión. La versión de doble puerta NC 150D es ideal para los centros de esterilización que tienen áreas limpias y estériles separadas.
+
+El esterilizador a vapor NC 150/150D es ideal para centros de esterilización de tamaño mediano para la esterilización de instrumentos quirúrgicos y dentales empaquetados o desempaquetados, ropa de operación, vidrio, plástico, caucho y materiales de silicona. 7 programas preestablecidos y 12 programas personalizados facilitan la esterilización para los usuarios.Si bien la calidad de la esterilización coincide con las necesidades de la norma europea EN 285 para esterilizadores de vapor grandes, los instrumentos cumplen con las directivas sobre dispositivos médicos y equipos a presión. La versión de doble puerta NC 150D es ideal para los centros de esterilización que tienen áreas limpias y estériles separadas.
+
+El esterilizador a vapor NC 150/150D es ideal para centros de esterilización de tamaño mediano para la esterilización de instrumentos quirúrgicos y dentales empaquetados o desempaquetados, ropa de operación, vidrio, plástico, caucho y materiales de silicona. 7 programas preestablecidos y 12 programas personalizados facilitan la esterilización para los usuarios.
+
+Si bien la calidad de la esterilización coincide con las necesidades de la norma europea EN 285 para esterilizadores de vapor grandes, los instrumentos cumplen con las directivas sobre dispositivos médicos y equipos a presión. La versión de doble puerta NC 150D es ideal para los centros de esterilización que tienen áreas limpias y estériles separadas.
+
+![ESTERILIZADORES DE VAPOR HORIZONTALES](https://bdinstruments.com/wp-content/uploads/2024/05/2.4.png)
+
+## ESTERILIZADORES DE VAPOR HORIZONTALES
+
+- NC 430D / 570 / 570D / 710 / 710D
+
+Nuestras continuas inversiones en investigación y desarrollo nos han permitido desarrollar series de esterilizadores de vapor horizontales con un innovador sistema de refrigeración por aire que reduce el consumo de agua durante la condensación del vapor.Las versiones de doble puerta son prácticas para un uso de alto rendimiento. Una pantalla grande (con una segunda pantalla más pequeña en las unidades de doble puerta) muestra todos los parámetros y mensajes, además ofrece diagnósticos para servicio. Una impresora incorporada registra el ciclo y una interfaz de datos opcional permite al operador realizar un seguimiento de todas las condiciones a través del software NüveCloser™ en la PC. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario. Las versiones de doble puerta son ideales para centros de esterilización centrales que tienen lados limpios y estériles.
+
+Nuestras continuas inversiones en investigación y desarrollo nos han permitido desarrollar series de esterilizadores de vapor horizontales con un innovador sistema de refrigeración por aire que reduce el consumo de agua durante la condensación del vapor.Las versiones de doble puerta son prácticas para un uso de alto rendimiento. Una pantalla grande (con una segunda pantalla más pequeña en las unidades de doble puerta) muestra todos los parámetros y mensajes, además ofrece diagnósticos para servicio. Una impresora incorporada registra el ciclo y una interfaz de datos opcional permite al operador realizar un seguimiento de todas las condiciones a través del software NüveCloser™ en la PC. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario. Las versiones de doble puerta son ideales para centros de esterilización centrales que tienen lados limpios y estériles.
+
+Nuestras continuas inversiones en investigación y desarrollo nos han permitido desarrollar series de esterilizadores de vapor horizontales con un innovador sistema de refrigeración por aire que reduce el consumo de agua durante la condensación del vapor.Las versiones de doble puerta son prácticas para un uso de alto rendimiento. Una pantalla grande (con una segunda pantalla más pequeña en las unidades de doble puerta) muestra todos los parámetros y mensajes, además ofrece diagnósticos para servicio. Una impresora incorporada registra el ciclo y una interfaz de datos opcional permite al operador realizar un seguimiento de todas las condiciones a través del software NüveCloser™ en la PC. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario. Las versiones de doble puerta son ideales para centros de esterilización centrales que tienen lados limpios y estériles.
+
+Nuestras continuas inversiones en investigación y desarrollo nos han permitido desarrollar series de esterilizadores de vapor horizontales con un innovador sistema de refrigeración por aire que reduce el consumo de agua durante la condensación del vapor.Las versiones de doble puerta son prácticas para un uso de alto rendimiento. Una pantalla grande (con una segunda pantalla más pequeña en las unidades de doble puerta) muestra todos los parámetros y mensajes, además ofrece diagnósticos para servicio. Una impresora incorporada registra el ciclo y una interfaz de datos opcional permite al operador realizar un seguimiento de todas las condiciones a través del software NüveCloser™ en la PC. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario. Las versiones de doble puerta son ideales para centros de esterilización centrales que tienen lados limpios y estériles.
+
+Nuestras continuas inversiones en investigación y desarrollo nos han permitido desarrollar series de esterilizadores de vapor horizontales con un innovador sistema de refrigeración por aire que reduce el consumo de agua durante la condensación del vapor.Las versiones de doble puerta son prácticas para un uso de alto rendimiento. Una pantalla grande (con una segunda pantalla más pequeña en las unidades de doble puerta) muestra todos los parámetros y mensajes, además ofrece diagnósticos para servicio. Una impresora incorporada registra el ciclo y una interfaz de datos opcional permite al operador realizar un seguimiento de todas las condiciones a través del software NüveCloser™ en la PC. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario. Las versiones de doble puerta son ideales para centros de esterilización centrales que tienen lados limpios y estériles.
+
+Nuestras continuas inversiones en investigación y desarrollo nos han permitido desarrollar series de esterilizadores de vapor horizontales con un innovador sistema de refrigeración por aire que reduce el consumo de agua durante la condensación del vapor.
+
+Las versiones de doble puerta son prácticas para un uso de alto rendimiento. Una pantalla grande (con una segunda pantalla más pequeña en las unidades de doble puerta) muestra todos los parámetros y mensajes, además ofrece diagnósticos para servicio. Una impresora incorporada registra el ciclo y una interfaz de datos opcional permite al operador realizar un seguimiento de todas las condiciones a través del software NüveCloser™ en la PC. Una amplia gama de funciones de seguridad y autodiagnóstico brindan protección total al usuario. Las versiones de doble puerta son ideales para centros de esterilización centrales que tienen lados limpios y estériles.
+
+![ESTERILIZADORES DE VAPOR HORIZONTALES](https://bdinstruments.com/wp-content/uploads/2024/05/2.5.png)

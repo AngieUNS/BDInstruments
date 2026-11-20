@@ -1,5 +1,6 @@
 ---
 import { getCategory } from '../data/categories';
+import ProductImage from './ProductImage.astro';
 import { instrumentationProducts } from '../data/products';
 
 const carouselProducts = instrumentationProducts.slice(0, 3);
@@ -16,7 +17,14 @@ const carouselProducts = instrumentationProducts.slice(0, 3);
             aria-hidden={index !== 0 ? 'true' : 'false'}
             aria-label={`${index + 1} de ${carouselProducts.length}: ${product.name}`}
           >
-            <img src={product.image} alt={product.name} width="400" height="300" />
+            <ProductImage
+              src={product.image}
+              alt={product.name}
+              widths={[400, 800]}
+              sizes="(max-width: 768px) 80vw, 400px"
+              loading={index === 0 ? 'eager' : 'lazy'}
+              fetchpriority={index === 0 ? 'high' : 'auto'}
+            />
             <div class="bd-hero-caption">
               <span>{getCategory(product.category)?.name}</span>
               <h2>{product.name}</h2>

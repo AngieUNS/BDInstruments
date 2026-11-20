@@ -1,6 +1,7 @@
 
 ---
 import { getCategory } from '../data/categories';
+import ProductImage from './ProductImage.astro';
 import type { ProductCardItem } from '../data/products';
 
 interface Props {
@@ -21,12 +22,12 @@ const href = `/productos/${product.slug}`;
 >
   <a class="product-card-link" href={href}>
     <div class="product-card-media">
-      <img
+      <ProductImage
           src={product.image}
           alt={product.name}
+          widths={[320, 480, 640]}
+          sizes="(max-width: 640px) 90vw, 340px"
           loading="lazy"
-          width="600"
-          height="480"
       />
 
       <span class="product-card-arrow" aria-hidden="true">↗</span>

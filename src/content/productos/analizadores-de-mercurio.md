@@ -1,6 +1,11 @@
 ---
 # Importado de https://bdinstruments.com/analizadores-de-mercurio/ — BORRADOR: revisar redacción
 summary: "Beneficios de Utilizar Analizadores de Mercurio"
+models:
+  - name: "M-8000 CVAF"
+    image: "https://bdinstruments.com/wp-content/uploads/2023/05/5-3.png"
+  - name: "QuickTrace® M-7600 CVAA"
+    image: "https://bdinstruments.com/wp-content/uploads/2023/05/Mesa-de-trabajo-1-1.png"
 ---
 
 ## ¿Qué es un Analizador de Mercurio?
@@ -23,15 +28,3 @@ Los analizadores de mercurio ofrecen numerosas ventajas para laboratorios e indu
 ## Soluciones Personalizadas con Analizadores de Mercurio
 
 En [BD Instruments](https://bdinstruments.com/), ofrecemos una gama de analizadores de mercurio diseñados para adaptarse a las necesidades específicas de su laboratorio o planta industrial. Desde modelos portátiles hasta sistemas de alta capacidad, contamos con la solución ideal para cada aplicación.
-
-![Analizadores de Mercurio Teledyne M-8000 CVAF](https://bdinstruments.com/wp-content/uploads/2023/05/5-3.png)
-
-*M-8000 CVAF*
-
-(Teledyne Leeman Labs)
-
-![Analizadores de Mercurio Teledyne QuickTrace® M-7600 CVAA](https://bdinstruments.com/wp-content/uploads/2023/05/Mesa-de-trabajo-1-1.png)
-
-*QuickTrace® M-7600 CVAA*
-
-(Teledyne Leeman Labs)

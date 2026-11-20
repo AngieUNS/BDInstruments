@@ -1,0 +1,28 @@
+---
+/**
+ * Imagen de producto.
+ * - Al compilar (npm run build): usa <Image> de Astro → WebP en varios tamaños, mucho más liviano.
+ * - En desarrollo (npm run dev): usa un <img> normal para que las páginas abran al instante,
+ *   sin esperar a que Astro descargue y convierta cada imagen.
+ */
+import type { HTMLAttributes } from 'astro/types';
+import { Image } from 'astro:assets';
+
+interface Props extends Omit<HTMLAttributes<'img'>, 'src' | 'width' | 'height'> {
+  src: string;
+  alt: string;
+  /** Anchos (px) a generar al compilar. */
+  widths: number[];
+  sizes: string;
+}
+
+const { src, alt, widths, sizes, ...attrs } = Astro.props;
+---
+
+{
+  import.meta.env.DEV ? (
+    <img src={src} alt={alt} decoding="async" {...attrs} />
+  ) : (
+    <Image src={src} alt={alt} inferSize widths={widths} sizes={sizes} decoding="async" {...attrs} />
+  )
+}

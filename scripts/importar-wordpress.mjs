@@ -207,6 +207,12 @@ function convertPage(html, wpUrl) {
         const image = imageOf(widget);
         const title = clean(widget.querySelector('.elementor-image-box-title')?.text ?? '');
         const description = clean(widget.querySelector('.elementor-image-box-description')?.text ?? '');
+        // Galería de subproductos: imagen + título + "(Marca)" → tarjeta de modelo
+        if (title && image?.src && /^\(.+\)$/.test(description)) {
+          const name = title.charAt(0).toLocaleUpperCase('es') + title.slice(1);
+          data.models.push({ name, image: image.src });
+          break;
+        }
         if (image?.src) body.push(`![${image.alt || title}](${image.src})`);
         if (title) body.push(`*${title}*`);
         if (description) body.push(description);
@@ -263,7 +269,7 @@ function toFile({ data, markdown, wpUrl }) {
     for (const model of data.models) {
       lines.push(`  - name: ${yamlString(model.name)}`);
       if (model.image) lines.push(`    image: ${yamlString(model.image)}`);
-      lines.push(`    description: ${yamlString(model.description)}`);
+      if (model.description) lines.push(`    description: ${yamlString(model.description)}`);
     }
   }
   lines.push('---', '', markdown, '');

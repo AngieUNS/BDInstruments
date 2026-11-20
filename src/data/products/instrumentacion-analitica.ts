@@ -59,7 +59,7 @@ export const instrumentationProducts: ProductCardItem[] = [
     brand: 'Teledyne Cetac Technologies',
     category: 'instrumentacion-analitica',
     image: `${UPLOADS}2023/05/11.png`,
-    href: 'https://www.teledynecetac.com/products/automation/asx-560',
+    href: `${OLD_SITE}asx-560/`,
   },
   {
     slug: 'automuestreadores',

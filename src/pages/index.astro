@@ -1,5 +1,6 @@
 ---
 import Hero from '../components/Hero.astro';
+import ProductImage from '../components/ProductImage.astro';
 import Manufacturers from '../components/Manufacturers.astro';
 import { categories, getCategory } from '../data/categories';
 import { featuredProducts, getProductsByCategory } from '../data/products';
@@ -193,7 +194,7 @@ import MainLayout from '../layouts/MainLayout.astro';
           featuredProducts.map((product) => (
             <article class="pr-card">
               <a class="pr-img" href={`/productos/${product.slug}`} tabindex="-1" aria-hidden="true">
-                <img src={product.image} alt="" loading="lazy" />
+                <ProductImage src={product.image} alt="" widths={[320, 480, 640]} sizes="(max-width: 640px) 90vw, 360px" loading="lazy" />
               </a>
               <div class="pr-body">
                 <small>{getCategory(product.category)?.name}</small>

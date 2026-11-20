@@ -1,7 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import { categories } from '../data/categories';
-import { services } from '../data/services';
 import { site, whatsappHref } from '../data/site';
+
+const services = (await getCollection('servicios'))
+  .sort((a, b) => a.data.order - b.data.order)
+  .map((service) => ({ title: service.data.title }));
 ---
 
 <form

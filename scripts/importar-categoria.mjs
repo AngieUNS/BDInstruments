@@ -21,12 +21,10 @@ import { spawnSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parse } from 'node-html-parser';
+import { SITE, UPLOADS, clean, cleanUrl, fetchPage, normalizeName, pause, slugOf, slugify } from './lib/elementor.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const DATA_DIR = path.join(ROOT, 'src/data/products');
-const SITE = 'https://bdinstruments.com/';
-const UPLOADS = `${SITE}wp-content/uploads/`;
-const API = `${SITE}wp-json/wp/v2/pages`;
 
 /** Página de inicio del listado de cada categoría en la web antigua. */
 const START_PAGES = {
@@ -56,45 +54,13 @@ if (!START_PAGES[category]) {
   process.exit(1);
 }
 
-// ---------------------------------------------------------------------------
-// Utilidades de texto
-// ---------------------------------------------------------------------------
-const INVISIBLE = /[​-‍⁠﻿]/g;
-const clean = (t = '') => t.replace(INVISIBLE, '').replace(/ /g, ' ').replace(/\s+/g, ' ').trim();
-const cleanUrl = (u = '') => u.trim().replace(INVISIBLE, (c) => encodeURIComponent(c));
-const slugOf = (url) => url.replace(/\/+$/, '').split('/').pop();
+// Texto en una sola línea (los títulos del listado a veces traen saltos de línea)
+const text = (t = '') => clean(t).replace(/\s+/g, ' ');
 const capitalize = (w) => w.charAt(0).toLocaleUpperCase('es') + w.slice(1).toLocaleLowerCase('es');
-
-/** "Baño María (Lab Tech)" → "bano-maria-lab-tech" */
-const slugify = (text) =>
-  text
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-
-/** "ANALIZADOR DE LECHE" → "Analizador de Leche"; respeta siglas cortas (PCR, FSA, RH2). */
-function normalizeName(name) {
-  const small = new Set(['de', 'del', 'la', 'las', 'el', 'los', 'y', 'e', 'o', 'para', 'por', 'en', 'con', 'a']);
-  const result = clean(name)
-    .replace(/\s*-\s*/g, ' - ')
-    .replace(/(^|\s)(\|{1,3})(?=\s|$)/g, (_, space, bars) => space + 'I'.repeat(bars.length)) // "Tipo ||" → "Tipo II"
-    .split(' ')
-    .map((word, i) => {
-      const letters = word.replace(/[^\p{L}]/gu, '');
-      const isCaps = letters.length > 4 && letters === letters.toLocaleUpperCase('es');
-      if (!isCaps) return word;
-      const lower = word.toLocaleLowerCase('es');
-      return i > 0 && small.has(lower) ? lower : capitalize(word);
-    })
-    .join(' ');
-  return result.charAt(0).toLocaleUpperCase('es') + result.slice(1); // "tamizadores" → "Tamizadores"
-}
 
 /** "(Konica minolta)" → "Konica Minolta"; "(huber)" → "Huber". */
 function normalizeBrand(raw) {
-  const brand = clean(raw).replace(/^\(|\)$/g, '').replace(/,?\s*inc\.?$/i, '').trim();
+  const brand = text(raw).replace(/^\(|\)$/g, '').replace(/,?\s*inc\.?$/i, '').trim();
   if (!brand) return 'Sin marca';
   const alias = BRAND_ALIASES[brand.toLowerCase()];
   if (alias) return alias;
@@ -106,14 +72,6 @@ function normalizeBrand(raw) {
 // ---------------------------------------------------------------------------
 // 1. Recorre las páginas del listado (siguiendo los botones "Página N")
 // ---------------------------------------------------------------------------
-async function fetchPage(wpSlug) {
-  const res = await fetch(`${API}?slug=${encodeURIComponent(wpSlug)}&_fields=link,content`, {
-    headers: { 'User-Agent': 'bd-site-importer' },
-  });
-  if (!res.ok) throw new Error(`HTTP ${res.status} en ${wpSlug}`);
-  const [page] = await res.json();
-  return page ? parse(page.content.rendered) : null;
-}
 
 async function crawlListing(firstSlug) {
   const queue = [firstSlug];
@@ -126,7 +84,8 @@ async function crawlListing(firstSlug) {
     if (visited.has(wpSlug)) continue;
     visited.add(wpSlug);
 
-    const root = await fetchPage(wpSlug);
+    const page = await fetchPage(wpSlug);
+    const root = page && parse(page.html);
     if (!root) {
       warnings.push(`no existe la página de listado "${wpSlug}"`);
       continue;
@@ -134,7 +93,7 @@ async function crawlListing(firstSlug) {
 
     for (const box of root.querySelectorAll('.elementor-widget-image-box')) {
       const name = normalizeName(box.querySelector('.elementor-image-box-title')?.text);
-      const rawBrand = clean(box.querySelector('.elementor-image-box-description')?.text);
+      const rawBrand = text(box.querySelector('.elementor-image-box-description')?.text);
       const href = box.querySelector('a')?.getAttribute('href') ?? '';
       const hasPage = href.startsWith(SITE);
       // Sin enlace ni marca "(…)" → es un adorno del listado (p. ej. el título de la categoría)
@@ -157,7 +116,7 @@ async function crawlListing(firstSlug) {
         if (/p[aá]gina/i.test(link.text) && href.startsWith(SITE)) queue.push(slugOf(href));
       }
     }
-    await new Promise((r) => setTimeout(r, 300));
+    await pause();
   }
   return { products: [...found.values()], pages: [...visited], warnings };
 }

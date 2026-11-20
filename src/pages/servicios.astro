@@ -1,26 +1,85 @@
 ---
-import ServiceSection from '../components/ServiceSection.astro';
-import { services } from '../data/services';
+import { getCollection } from 'astro:content';
+import ProductImage from '../components/ProductImage.astro';
 import MainLayout from '../layouts/MainLayout.astro';
+
+// Servicios en src/content/servicios/*.md (se importan con `node scripts/importar-servicios.mjs`)
+const services = (await getCollection('servicios')).sort((a, b) => a.data.order - b.data.order);
+
+/** Markdown en línea → texto plano ("**LIMS**" → "LIMS", "[x](url)" → "x"). */
+const plain = (text: string) => text.replace(/\*\*|__/g, '').replace(/\[([^\]]+)\]\([^)]+\)/g, '$1').trim();
+
+/**
+ * "Qué incluye": las primeras viñetas del texto del servicio. Si no tiene viñetas,
+ * se usan sus subtítulos (sin las preguntas tipo "¿Qué es?").
+ */
+function highlights(body = '', max = 4) {
+  const bullets = body
+    .split('\n')
+    .filter((line) => line.startsWith('- '))
+    .map((line) => plain(line.slice(2)).replace(/[.;]$/, ''));
+  if (bullets.length) return { items: bullets.slice(0, max), more: Math.max(0, bullets.length - max) };
+  const headings = body
+    .split('\n')
+    .filter((line) => line.startsWith('## ') && !line.trim().endsWith('?'))
+    .map((line) => plain(line.slice(3)));
+  return { items: headings.slice(0, max), more: 0 };
+}
 ---
 
 <MainLayout
   title="Servicios"
-  description="Suministro, instalación, calibración, mantenimiento, capacitación y repuestos para instrumentos de laboratorio."
+  description="Asesoría técnica, capacitaciones, instalaciones de gases especiales, manufactura a medida, software de mantenimiento y soporte técnico para laboratorios."
 >
   <header class="page-hero">
     <div class="wrap">
       <p class="kicker">Servicios</p>
-      <h1>Acompañamiento durante la vida del equipo</h1>
+      <h1>Nuestras herramientas a sus manos</h1>
       <p class="lead">
-        El instrumento llega con instalación, verificación y un canal para mantenimiento, repuestos y entrenamiento.
+        Le acompañamos antes, durante y después de la compra: asesoría, instalación, capacitación, fabricación a medida y
+        soporte técnico para que sus equipos rindan durante toda su vida útil.
       </p>
     </div>
   </header>
 
   <section class="section section-follow">
-    <div class="wrap stack">
-      {services.map((service, index) => <ServiceSection service={service} index={index} />)}
+    <div class="wrap">
+      <ol class="service-list">
+        {
+          services.map((service, index) => {
+            const { title, summary, image } = service.data;
+            const { items, more } = highlights(service.body);
+            const href = `/servicios/${service.id}`;
+            return (
+              <li class="service-row">
+                <a class="service-row-media" href={href} tabindex="-1" aria-hidden="true">
+                  <ProductImage src={image} alt="" widths={[480, 720, 960]} sizes="(max-width: 860px) 92vw, 520px" loading="lazy" />
+                </a>
+                <div class="service-row-copy">
+                  <span class="service-row-number" aria-hidden="true">
+                    {String(index + 1).padStart(2, '0')}
+                  </span>
+                  <h2>
+                    <a href={href}>{title}</a>
+                  </h2>
+                  {summary && <p class="service-row-summary">{summary}</p>}
+                  {items.length > 0 && (
+                    <ul class="service-row-points">
+                      {items.map((item) => (
+                        <li>{item}</li>
+                      ))}
+                      {more > 0 && <li class="service-row-more">y {more} más</li>}
+                    </ul>
+                  )}
+                  <a class="service-row-cta" href={href}>
+                    Conocer el servicio <span aria-hidden="true">→</span>
+                  </a>
+                </div>
+              </li>
+            );
+          })
+        }
+      </ol>
     </div>
   </section>
 
@@ -34,3 +93,177 @@ import MainLayout from '../layouts/MainLayout.astro';
     </div>
   </div>
 </MainLayout>
+
+<style>
+  .service-list {
+    display: grid;
+    gap: 28px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  /* Cada servicio es una fila: foto a un lado, texto al otro; se alternan (zigzag) */
+  .service-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--surface);
+    transition:
+      border-color 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  .service-row:hover {
+    border-color: #b6c9e8;
+    box-shadow: 0 12px 28px rgb(12 27 51 / 8%);
+  }
+
+  .service-row:nth-child(even) .service-row-media {
+    order: 2;
+  }
+
+  .service-row-media {
+    position: relative;
+    display: block;
+    min-height: 320px;
+    overflow: hidden;
+    background: var(--tint);
+  }
+
+  .service-row-media img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .service-row:hover .service-row-media img {
+    transform: scale(1.03);
+  }
+
+  .service-row-copy {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: clamp(28px, 4vw, 48px);
+  }
+
+  .service-row-number {
+    margin-bottom: 14px;
+    color: var(--brand-2);
+    font-family: var(--serif);
+    font-size: 2.6rem;
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    opacity: 0.35;
+  }
+
+  .service-row-copy h2 {
+    margin: 0;
+    font-size: clamp(1.45rem, 2.4vw, 1.9rem);
+  }
+
+  .service-row-copy h2 a {
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .service-row-copy h2 a:hover {
+    color: var(--brand);
+  }
+
+  .service-row-summary {
+    margin: 12px 0 0;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+
+  .service-row-points {
+    display: grid;
+    gap: 8px;
+    margin: 20px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .service-row-points li {
+    position: relative;
+    padding-left: 26px;
+    color: var(--ink);
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* Viñeta: check azul sobre círculo claro */
+  .service-row-points li::before {
+    content: '';
+    position: absolute;
+    top: 0.2em;
+    left: 0;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background:
+      no-repeat center / 10px
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230a3fa0' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E"),
+      var(--tint);
+  }
+
+  .service-row-points .service-row-more {
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .service-row-points .service-row-more::before {
+    background: none;
+  }
+
+  .service-row-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 26px;
+    padding: 0.65rem 1.1rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--brand);
+    font-weight: 700;
+    text-decoration: none;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .service-row-cta:hover {
+    border-color: var(--brand);
+    background: var(--tint);
+  }
+
+  @media (max-width: 860px) {
+    .service-row {
+      grid-template-columns: 1fr;
+    }
+
+    .service-row:nth-child(even) .service-row-media {
+      order: 0;
+    }
+
+    .service-row-media {
+      min-height: 0;
+      aspect-ratio: 16 / 9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .service-row,
+    .service-row-media img {
+      transition: none;
+    }
+  }
+</style>

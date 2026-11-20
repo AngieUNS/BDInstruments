@@ -1,45 +1,83 @@
 ---
-import { projects } from '../data/projects';
+import { getCollection } from 'astro:content';
+import EntryCard from '../components/EntryCard.astro';
 import MainLayout from '../layouts/MainLayout.astro';
+
+// Proyectos en src/content/proyectos/*.md (se importan con `node scripts/importar-proyectos.mjs`)
+const projects = (await getCollection('proyectos')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <MainLayout
   title="Proyectos"
-  description="Alcance de suministro e instalación para laboratorios clínicos, de alimentos, de agua y universitarios."
+  description="Cámaras de atmósfera controlada, maduración y estabilidad, diseño de laboratorios y automatización: proyectos desarrollados por BD Instruments."
 >
   <header class="page-hero">
     <div class="wrap">
       <p class="kicker">Proyectos</p>
-      <h1>Qué incluye cada tipo de laboratorio</h1>
+      <h1>Soluciones a medida</h1>
       <p class="lead">
-        Estos cuatro escenarios muestran el conjunto de equipos y el acompañamiento que suele hacer falta. El alcance final se ajusta a su método.
+        Diseñamos, fabricamos e implementamos proyectos completos: desde cámaras de conservación y maduración hasta el
+        diseño integral de laboratorios y la automatización de procesos.
       </p>
     </div>
   </header>
 
   <section class="section section-follow">
-    <div class="wrap stack">
-      {
-        projects.map((project) => (
-          <article class="service-block" id={project.slug}>
-            <div>
-              <p class="kicker">{project.sector}</p>
-              <h2>{project.title}</h2>
-              <p class="lead">{project.need}</p>
-              <div class="media-placeholder">Foto del proyecto</div>
-            </div>
-            <div class="scope-card">
-              <h3>Alcance habitual</h3>
-              <p>{project.summary}</p>
-              <ul>
-                {project.scope.map((item) => (
-                  <li>{item}</li>
-                ))}
-              </ul>
-            </div>
-          </article>
-        ))
-      }
+    <div class="wrap">
+      <div class="projects-grid">
+        {projects.map((project) => <EntryCard entry={project} section="proyectos" />)}
+      </div>
+
+      <aside class="projects-cta">
+        <div>
+          <h2>¿Tiene un proyecto en mente?</h2>
+          <p>Cuéntenos qué necesita y le proponemos una solución adaptada a su proceso.</p>
+        </div>
+        <a class="button" href="/contacto?interes=Proyecto%20a%20medida">Conversemos <span aria-hidden="true">→</span></a>
+      </aside>
     </div>
   </section>
 </MainLayout>
+
+<style>
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 28px;
+  }
+
+  .projects-cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    margin-top: 56px;
+    padding: 32px;
+    border-radius: 16px;
+    /* Mismos tonos claros que las bandas .cta-band del sitio */
+    background: var(--tint);
+    color: var(--ink);
+  }
+
+  .projects-cta h2 {
+    margin: 0 0 8px;
+    color: var(--ink);
+    font-size: 1.5rem;
+  }
+
+  .projects-cta p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  @media (max-width: 640px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .projects-cta {
+      padding: 24px;
+    }
+  }
+</style>

@@ -1,0 +1,182 @@
+---
+/**
+ * Página de detalle de un proyecto o servicio: cabecera con foto, índice lateral fijo,
+ * contenido Markdown, galería, video y "Otros …". Los textos salen de src/data/secciones.ts.
+ */
+import { render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import { sections, type SectionKey } from '../data/secciones';
+import MainLayout from '../layouts/MainLayout.astro';
+import EntryCard from './EntryCard.astro';
+import ProductImage from './ProductImage.astro';
+import '../styles/detalle.css';
+
+interface Props {
+  entry: CollectionEntry<SectionKey>;
+  section: SectionKey;
+  others: CollectionEntry<SectionKey>[];
+}
+
+const { entry, section, others } = Astro.props;
+const texts = sections[section];
+const { title, summary, image, sector, brochureUrl, youtubeId, models = [] } = entry.data;
+const { Content, headings } = await render(entry);
+const hasBody = Boolean(entry.body?.trim());
+const contactUrl = `/contacto?interes=${encodeURIComponent(title)}`;
+
+// "Descripción" solo si el texto no empieza ya con un título (si no, ambos llevarían al mismo sitio)
+const startsWithHeading = entry.body?.trimStart().startsWith('## ');
+const toc = [
+  ...(hasBody && !startsWithHeading ? [{ slug: 'descripcion', text: 'Descripción' }] : []),
+  ...headings.filter((heading) => heading.depth === 2),
+  ...(models.length > 0 ? [{ slug: 'modelos', text: texts.galleryTitle }] : []),
+  ...(youtubeId ? [{ slug: 'video', text: 'Video' }] : []),
+];
+---
+
+<MainLayout title={title} description={summary}>
+  <div class="product-page">
+    <div class="wrap">
+      <nav class="crumb product-crumb" aria-label="Ruta">
+        <a href="/">Inicio</a>
+        <span aria-hidden="true">/</span>
+        <a href={texts.base}>{texts.label}</a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{title}</span>
+      </nav>
+
+      <section class="product-intro" aria-labelledby="entry-title">
+        <div class="product-intro-media entry-intro-media">
+          <ProductImage
+            src={image}
+            alt={title}
+            widths={[480, 720, 1000]}
+            sizes="(max-width: 768px) 92vw, 540px"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+        <div class="product-intro-copy">
+          <p class="kicker">{sector ?? texts.kicker}</p>
+          <h1 id="entry-title">{title}</h1>
+          {summary && <p class="product-summary">{summary}</p>}
+          <div class="product-actions">
+            <a class="button" href={contactUrl}>{texts.cta} <span aria-hidden="true">→</span></a>
+            {brochureUrl && (
+              <a class="product-download" href={brochureUrl} target="_blank" rel="noopener noreferrer">
+                Ver ficha técnica <span aria-hidden="true">↗</span>
+              </a>
+            )}
+          </div>
+          <p class="product-help">{texts.help}</p>
+        </div>
+      </section>
+
+      <section class="product-information" aria-labelledby="information-title">
+        <aside class="product-information-heading">
+          <p class="kicker">{texts.infoKicker}</p>
+          <h2 id="information-title">{texts.infoTitle}</h2>
+          {toc.length > 1 && (
+            <nav class="product-toc" aria-label="Secciones de la página">
+              <ol>
+                {toc.map((item) => (
+                  <li><a href={`#${item.slug}`}>{item.text}</a></li>
+                ))}
+              </ol>
+            </nav>
+          )}
+          <div class="product-toc-cta">
+            <p>{texts.sideQuestion}</p>
+            <a class="button" href={contactUrl}>{texts.cta} <span aria-hidden="true">→</span></a>
+          </div>
+        </aside>
+
+        <div class="product-information-content">
+          {hasBody && (
+            <div class="product-info-block product-prose" id="descripcion">
+              <Content />
+            </div>
+          )}
+
+          {models.length > 0 && (
+            <div class="product-info-block" id="modelos">
+              <h3>{texts.galleryTitle}</h3>
+              <div class:list={['product-models', { 'is-gallery': models.every((model) => !model.description) }]}>
+                {models.map((model) => (
+                  <article class="product-model">
+                    {model.image && (
+                      <ProductImage src={model.image} alt={model.name} widths={[200, 400]} sizes="200px" loading="lazy" />
+                    )}
+                    <div>
+                      <h4>{model.name}</h4>
+                      {model.description && <p>{model.description}</p>}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {youtubeId && (
+            <div class="product-info-block" id="video">
+              <h3>Video</h3>
+              <div class="product-video">
+                <iframe
+                  src={`https://www.youtube-nocookie.com/embed/${youtubeId}`}
+                  title={`Video: ${title}`}
+                  loading="lazy"
+                  allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+            </div>
+          )}
+
+          {!hasBody && !models.length && (
+            <div class="product-info-block">
+              <h3>Información en preparación</h3>
+              <p>{texts.emptyText}</p>
+              <a class="product-info-link" href={contactUrl}>Consultar <span aria-hidden="true">→</span></a>
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+
+    {others.length > 0 && (
+      <section class="related-products">
+        <div class="wrap">
+          <div class="related-heading">
+            <div>
+              <p class="kicker">Siga explorando</p>
+              <h2>{texts.othersTitle}</h2>
+            </div>
+            <a href={texts.base}>{texts.allLink} <span aria-hidden="true">→</span></a>
+          </div>
+          <div class="entry-grid">
+            {others.map((other) => <EntryCard entry={other} section={section} showSummary={false} />)}
+          </div>
+        </div>
+      </section>
+    )}
+  </div>
+</MainLayout>
+
+<script>
+  import '../scripts/indice-detalle';
+</script>
+
+<style>
+  .entry-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 24px;
+  }
+
+  /* Son fotografías (no productos sobre fondo blanco): llenan el recuadro */
+  .entry-intro-media img {
+    padding: 0;
+    object-fit: cover;
+    mix-blend-mode: normal;
+  }
+</style>

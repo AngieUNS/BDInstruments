@@ -1,0 +1,105 @@
+---
+import ProductImage from '../components/ProductImage.astro';
+import { industries } from '../data/industrias';
+import MainLayout from '../layouts/MainLayout.astro';
+---
+
+<MainLayout
+  title="Industrias"
+  description="Instrumentación analítica y equipos de laboratorio para agroindustria, alimentos, farmacéutica, minería, medio ambiente, salud, educación y muchas industrias más."
+>
+  <header class="page-hero">
+    <div class="wrap">
+      <p class="kicker">Industrias</p>
+      <h1>Soluciones para cada industria</h1>
+      <p class="lead">
+        Acompañamos a laboratorios de {industries.length} sectores, desde la agroindustria y los alimentos hasta la minería,
+        la salud y la investigación científica.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section-follow">
+    <div class="wrap">
+      <ul class="industry-grid" id="industrias">
+        {
+          industries.map((industry) => (
+            <li class="industry-tile">
+              <figure>
+                <ProductImage src={industry.image} alt="" widths={[400, 640, 800]} sizes="(max-width: 860px) 46vw, 370px" loading="lazy" />
+                <figcaption class="industry-name">{industry.name}</figcaption>
+              </figure>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</MainLayout>
+
+<style>
+  /* Mosaico de fotos (3 por fila) con el nombre sobre la imagen; solo informativo, sin enlaces */
+  .industry-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .industry-tile figure {
+    position: relative;
+    aspect-ratio: 7 / 5;
+    overflow: hidden;
+    margin: 0;
+    border-radius: 12px;
+    background: var(--tint);
+    color: #fff;
+    isolation: isolate;
+  }
+
+  .industry-tile img {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Degradado azul de marca para que el nombre se lea sobre cualquier foto */
+  .industry-tile figure::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgb(18 40 107 / 0%) 40%, rgb(18 40 107 / 85%) 100%);
+  }
+
+  .industry-name {
+    position: absolute;
+    right: 18px;
+    bottom: 16px;
+    left: 18px;
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    text-shadow: 0 1px 3px rgb(0 0 0 / 35%);
+  }
+
+  @media (max-width: 860px) {
+    .industry-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .industry-name {
+      right: 12px;
+      bottom: 10px;
+      left: 12px;
+      font-size: 0.95rem;
+    }
+  }
+</style>

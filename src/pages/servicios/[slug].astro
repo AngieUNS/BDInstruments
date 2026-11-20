@@ -1,0 +1,22 @@
+---
+import { getCollection } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
+import EntryDetail from '../../components/EntryDetail.astro';
+
+export async function getStaticPaths() {
+  const services = (await getCollection('servicios')).sort((a, b) => a.data.order - b.data.order);
+  return services.map((service) => ({
+    params: { slug: service.id },
+    props: { service, others: services.filter((other) => other.id !== service.id).slice(0, 3) },
+  }));
+}
+
+interface Props {
+  service: CollectionEntry<'servicios'>;
+  others: CollectionEntry<'servicios'>[];
+}
+
+const { service, others } = Astro.props;
+---
+
+<EntryDetail entry={service} section="servicios" others={others} />

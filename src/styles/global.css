@@ -577,16 +577,32 @@ textarea {
   gap: 1.25rem;
   padding: 1.5rem;
   border-radius: 14px;
-  background:
-    radial-gradient(520px 300px at 85% 0%, #2f6fe0 0%, transparent 70%),
-    linear-gradient(135deg, #12286b 0%, #183a8f 50%, #1f56c8 140%);
-  color: #fff;
+  /* Tonos claros: fondo azul suave, título oscuro, texto gris y botón azul de marca */
+  background: var(--tint);
+  color: var(--ink);
+}
+
+.cta-band-inner h2 {
+  color: var(--ink);
 }
 
 .cta-band-inner p {
   margin-top: 0.45rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--muted);
   max-width: 38rem;
+}
+
+/* El botón blanco (.button-light) no se vería sobre fondo claro: aquí va azul con texto blanco */
+.cta-band-inner .button-light {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #fff;
+}
+
+.cta-band-inner .button-light:hover {
+  background: #08317d;
+  border-color: #08317d;
+  color: #fff;
 }
 
 .services-band {
